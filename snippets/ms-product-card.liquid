@@ -1,0 +1,31 @@
+{%- liquid
+  assign card_product = product
+  assign card_variant = card_product.selected_or_first_available_variant
+  assign card_image = card_product.featured_media.preview_image | default: card_product.featured_image
+-%}
+<article class="ms-product-card">
+  <a class="ms-product-card__media" href="{{ card_product.url | default: routes.all_products_collection_url }}">
+    {%- if card_image != blank -%}
+      {{ card_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '180, 320, 480, 640, 800', sizes: '(max-width: 767px) 160px, 328px', class: 'ms-product-card__image', alt: card_image.alt | default: card_product.title }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'ms-product-card__image ms-product-card__placeholder' }}
+    {%- endif -%}
+    <span class="ms-product-card__badge">{{ badge | default: '⚡ الأكثر مبيعا' }}</span>
+  </a>
+  <div class="ms-product-card__body">
+    <div class="ms-product-card__rating" aria-label="5 من 5 نجوم"><span>(7)</span><b>★★★★★</b></div>
+    <a class="ms-product-card__title" href="{{ card_product.url | default: routes.all_products_collection_url }}">{{ card_product.title | default: 'جدر محاشي من اختيارك' }}</a>
+    <div class="ms-product-card__prices">
+      {%- if card_variant.compare_at_price > card_variant.price -%}<s>{{ card_variant.compare_at_price | money_without_trailing_zeros }}</s>{%- endif -%}
+      <strong>{% if card_variant %}{{ card_variant.price | money_without_trailing_zeros }}{% else %}4.75KD{% endif %}</strong>
+    </div>
+    {%- if card_product != blank -%}
+      {%- form 'product', card_product, class: 'ms-product-card__form' -%}
+        <input type="hidden" name="id" value="{{ card_variant.id }}">
+        <button type="submit" name="add" {% unless card_variant.available %}disabled{% endunless %}>{{ button_label | default: 'أضف إلى السلة' }}</button>
+      {%- endform -%}
+    {%- else -%}
+      <a class="ms-product-card__button" href="{{ routes.all_products_collection_url }}">{{ button_label | default: 'أضف إلى السلة' }}</a>
+    {%- endif -%}
+  </div>
+</article>

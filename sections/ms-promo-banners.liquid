@@ -1,0 +1,30 @@
+<section class="ms-home ms-promos">
+  <div class="ms-promos__grid">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign fallback_asset = 'ms-promo-gathering.svg'
+        if forloop.index == 2
+          assign fallback_asset = 'ms-promo-buffet.svg'
+        endif
+      -%}
+      <a class="ms-promos__card" href="{{ block.settings.link | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '343, 671, 1000, 1400', sizes: '(max-width: 767px) calc(100vw - 32px), calc(50vw - 48px)', class: 'ms-promos__image', alt: block.settings.image.alt | default: block.settings.heading }}
+        {%- else -%}
+          <img class="ms-promos__image" src="{{ fallback_asset | asset_url }}" width="671" height="315" alt="{{ block.settings.heading | escape }}">
+        {%- endif -%}
+        <span class="ms-promos__shade"></span>
+        <span class="ms-promos__content">
+          <span><b>{{ block.settings.heading }}</b><small>{{ block.settings.text }}</small></span>
+          <em>{{ block.settings.button }}</em>
+        </span>
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+{% stylesheet %}
+.ms-promos{height:392px;padding:40px;background:#fafafa}.ms-promos__grid{display:grid;width:100%;height:315px;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.ms-promos__card{position:relative;display:block;overflow:hidden;border-radius:18px}.ms-promos__image{display:block;width:100%;height:100%;object-fit:cover}.ms-promos__shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,69,37,.86),rgba(10,69,37,0) 52%)}.ms-promos__content{position:absolute;right:22px;bottom:17px;left:22px;display:flex;align-items:flex-end;justify-content:space-between}.ms-promos__content>span{display:flex;flex-direction:column;align-items:flex-start}.ms-promos__content b{color:#fff;font-size:28px;font-weight:800;line-height:34px}.ms-promos__content small{color:rgba(255,255,255,.55);font-size:14px}.ms-promos__content em{display:grid;width:113px;height:34px;place-items:center;border:1px solid rgba(255,255,255,.55);border-radius:18px;background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-style:normal}@media(max-width:767px){.ms-promos{height:407px;padding:16px}.ms-promos__grid{height:376px;grid-template-columns:1fr;grid-template-rows:repeat(2,180px);gap:16px}.ms-promos__card{border-radius:16px}.ms-promos__image{height:315px;transform:translateY(-67.5px)}.ms-promos__content{right:15px;bottom:10px;left:15px}.ms-promos__content b{font-size:22px;line-height:27px}.ms-promos__content small{font-size:12px}.ms-promos__content em{width:83px;height:26px;font-size:11px}}
+{% endstylesheet %}
+{% schema %}
+{"name":"MS — Promo banners","max_blocks":2,"blocks":[{"type":"banner","name":"Banner","settings":[{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"heading","label":"Heading","default":"عزايمج صارت أكبر وألذ"},{"type":"text","id":"text","label":"Text","default":"تقدر تختار الأصناف اللي تحبها على كيفج"},{"type":"text","id":"button","label":"Button label","default":"اكتشف المزيد"},{"type":"url","id":"link","label":"Link"}]}],"presets":[{"name":"MS — Promo banners","blocks":[{"type":"banner","settings":{"heading":"عزايمج صارت أكبر وألذ"}},{"type":"banner","settings":{"heading":"بوفيه من اختيارك"}}]}]}
+{% endschema %}

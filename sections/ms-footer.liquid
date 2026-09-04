@@ -1,0 +1,32 @@
+<footer class="ms-home ms-footer">
+  <div class="ms-footer__top">
+    <div class="ms-footer__brand">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 500 | image_tag: loading: 'lazy', widths: '163, 326, 500', width: 163, alt: section.settings.logo.alt | default: shop.name }}
+      {%- else -%}
+        <img src="{{ 'ms-logo-footer.svg' | asset_url }}" width="163" height="75" alt="{{ shop.name | escape }}">
+      {%- endif -%}
+      <p>{{ section.settings.description }}</p>
+      <nav class="ms-footer__social" aria-label="{{ section.settings.social_label | escape }}">
+        {%- if section.settings.facebook != blank -%}<a href="{{ section.settings.facebook }}" aria-label="Facebook">{% render 'ms-icon', icon: 'facebook' %}</a>{%- endif -%}
+        {%- if section.settings.twitter != blank -%}<a href="{{ section.settings.twitter }}" aria-label="Twitter">{% render 'ms-icon', icon: 'twitter' %}</a>{%- endif -%}
+        {%- if section.settings.instagram != blank -%}<a href="{{ section.settings.instagram }}" aria-label="Instagram">{% render 'ms-icon', icon: 'instagram' %}</a>{%- endif -%}
+        {%- if section.settings.tiktok != blank -%}<a href="{{ section.settings.tiktok }}" aria-label="TikTok">{% render 'ms-icon', icon: 'tiktok' %}</a>{%- endif -%}
+      </nav>
+    </div>
+    <div class="ms-footer__menus">
+      <div><h2>{{ section.settings.categories_heading }}</h2><nav>{%- for link in section.settings.categories_menu.links -%}<a href="{{ link.url }}">{{ link.title }}</a>{%- else -%}{%- assign labels = 'أطباق,مفرزنات,بوفيهات,الأكثر مبيعاً,الفتة,حلويات مبردة,صوصات,الجدور,بوكس تقديم' | split: ',' -%}{%- for label in labels -%}<a href="{{ routes.all_products_collection_url }}">{{ label }}</a>{%- endfor -%}{%- endfor -%}</nav></div>
+      <div><h2>{{ section.settings.quick_heading }}</h2><nav>{%- for link in section.settings.quick_menu.links -%}<a href="{{ link.url }}">{{ link.title }}</a>{%- else -%}<a href="/pages/about-us">من نحن</a><a href="/blogs/news">المدونة</a><a href="/pages/contact-us">تواصل معنا</a>{%- endfor -%}</nav></div>
+      <div><h2>{{ section.settings.policy_heading }}</h2><nav>{%- for link in section.settings.policy_menu.links -%}<a href="{{ link.url }}">{{ link.title }}</a>{%- else -%}<a href="{{ shop.shipping_policy.url | default: '/policies/shipping-policy' }}">سياسة التوصيل</a><a href="{{ shop.terms_of_service.url | default: '/policies/terms-of-service' }}">شروط الخدمة</a>{%- endfor -%}</nav></div>
+    </div>
+  </div>
+  <div class="ms-footer__bottom">{{ section.settings.copyright }}</div>
+</footer>
+{% stylesheet %}
+.ms-footer{height:390px;overflow:hidden;padding:40px 96px 0;background:#1f423d;color:#fff}.ms-footer__top{display:flex;height:300px;flex-direction:row;justify-content:space-between}.ms-footer__brand{width:480px;text-align:right}.ms-footer__brand>img{display:block;width:152px;height:58px;margin-inline-start:auto;object-fit:contain}.ms-footer__brand p{width:480px;margin:12px 0 18px;color:rgba(255,255,255,.45);font-size:13px;line-height:20px}.ms-footer__social{display:flex;gap:10px}.ms-footer__social a{display:grid;width:42px;height:42px;place-items:center;border-radius:10px;background:rgba(255,255,255,.1)}.ms-footer__social svg{width:20px;height:20px}.ms-footer__menus{display:flex;gap:140px;direction:rtl}.ms-footer__menus>div{min-width:90px}.ms-footer__menus h2{margin:0 0 12px;font-size:14px;font-weight:700}.ms-footer__menus nav{display:flex;flex-direction:column;gap:7px}.ms-footer__menus a{color:rgba(255,255,255,.48);font-size:13px;line-height:21px}.ms-footer__bottom{height:50px;margin-inline:-96px;padding-top:15px;border-top:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.27);font-size:12px;text-align:center}
+@media(max-width:767px){.ms-footer{height:497px;padding:16px}.ms-footer__top{display:flex;height:430px;flex-direction:column;align-items:center}.ms-footer__brand{width:343px;text-align:center}.ms-footer__brand>img{width:163px;height:75px;margin:0 auto}.ms-footer__brand p{width:360px;margin:12px -8.5px 12px;font-size:13px;line-height:20px}.ms-footer__social{justify-content:center;gap:16px}.ms-footer__social a{width:42px;height:42px}.ms-footer__menus{display:flex;width:343px;margin-top:32px;flex-direction:column;gap:16px;text-align:center}.ms-footer__menus>div{min-width:0}.ms-footer__menus h2{margin-bottom:8px}.ms-footer__menus nav{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:0 12px}.ms-footer__menus a{line-height:20px}.ms-footer__bottom{height:35px;margin:0 -8px;padding-top:14px}}
+.ms-footer__social{direction:ltr}
+{% endstylesheet %}
+{% schema %}
+{"name":"MS — Footer","settings":[{"type":"image_picker","id":"logo","label":"Logo"},{"type":"textarea","id":"description","label":"Description","default":"محاشي طازجة بنكهات غنية، تغليف مرتب، وتوصيل سريع يخلي طلبك يوصل ساخن ولذيذ."},{"type":"text","id":"social_label","label":"Social links label","default":"تابعنا"},{"type":"url","id":"facebook","label":"Facebook","default":"/"},{"type":"url","id":"twitter","label":"Twitter / X","default":"/"},{"type":"url","id":"instagram","label":"Instagram","default":"/"},{"type":"url","id":"tiktok","label":"TikTok","default":"/"},{"type":"text","id":"categories_heading","label":"Categories heading","default":"الأقسام"},{"type":"link_list","id":"categories_menu","label":"Categories menu"},{"type":"text","id":"quick_heading","label":"Quick links heading","default":"روابط سريعة"},{"type":"link_list","id":"quick_menu","label":"Quick links menu"},{"type":"text","id":"policy_heading","label":"Policy heading","default":"سياسات"},{"type":"link_list","id":"policy_menu","label":"Policy menu"},{"type":"text","id":"copyright","label":"Copyright","default":"محاشي ستيشن — جميع الحقوق محفوظة © 2026"}],"presets":[{"name":"MS — Footer"}]}
+{% endschema %}

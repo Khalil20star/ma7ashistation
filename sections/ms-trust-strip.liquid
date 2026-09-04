@@ -1,0 +1,24 @@
+{%- liquid
+  assign visibility_class = ''
+  if section.settings.visibility == 'desktop'
+    assign visibility_class = ' ms-trust--desktop'
+  elsif section.settings.visibility == 'mobile'
+    assign visibility_class = ' ms-trust--mobile'
+  endif
+-%}
+<section class="ms-home ms-trust{{ visibility_class }}" aria-label="{{ section.settings.heading | escape }}">
+  <div class="ms-trust__grid">
+    {%- for block in section.blocks -%}
+      <div class="ms-trust__item" {{ block.shopify_attributes }}>
+        <span>{% render 'ms-icon', icon: block.settings.icon %}</span>
+        <b>{{ block.settings.text }}</b>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+{% stylesheet %}
+.ms-trust{height:49px;overflow:hidden;background:#e1c4a9;color:#153d32}.ms-trust__grid{display:grid;width:100%;max-width:920px;height:49px;margin:auto;grid-template-columns:repeat(4,1fr)}.ms-trust__item{display:flex;align-items:center;justify-content:center;gap:12px;border-inline-start:1px solid rgba(255,255,255,.8);font-size:13px}.ms-trust__item:first-child{border-inline-start:0}.ms-trust__item span,.ms-trust__item svg{width:20px;height:20px}.ms-trust--mobile{display:none}@media(max-width:767px){.ms-trust{height:67px}.ms-trust__grid{height:67px;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);max-width:none}.ms-trust__item{gap:6px;border-bottom:1px solid rgba(255,255,255,.8);font-size:10px}.ms-trust__item:nth-child(odd){border-inline-start:0}.ms-trust__item:nth-child(n+3){border-bottom:0}.ms-trust__item span,.ms-trust__item svg{width:19px;height:19px}.ms-trust--desktop{display:none}.ms-trust--mobile{display:block}}
+{% endstylesheet %}
+{% schema %}
+{"name":"MS — Trust strip","max_blocks":4,"settings":[{"type":"text","id":"heading","label":"Accessibility label","default":"مميزات المتجر"},{"type":"select","id":"visibility","label":"Visibility","options":[{"value":"all","label":"All screens"},{"value":"desktop","label":"Desktop only"},{"value":"mobile","label":"Mobile only"}],"default":"all"}],"blocks":[{"type":"item","name":"Trust item","settings":[{"type":"select","id":"icon","label":"Icon","options":[{"value":"clock","label":"Clock"},{"value":"calendar","label":"Calendar"},{"value":"box","label":"Box"},{"value":"cart","label":"Cart"}],"default":"clock"},{"type":"text","id":"text","label":"Text","default":"توصيل خلال ساعتين"}]}],"presets":[{"name":"MS — Trust strip","blocks":[{"type":"item","settings":{"icon":"clock","text":"توصيل خلال ساعتين"}},{"type":"item","settings":{"icon":"calendar","text":"جودة مضمونة"}},{"type":"item","settings":{"icon":"clock","text":"الشحن داخل الكويت"}},{"type":"item","settings":{"icon":"box","text":"مكونات فريش"}}]}]}
+{% endschema %}

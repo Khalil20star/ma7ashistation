@@ -53,6 +53,9 @@
         echo settings.custom_html_head
       endif
     -%}
+    {%- if request.page_type == 'index' -%}
+      {{ 'ms-home.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
 
     {{ content_for_header }}
     {%- endunless -%}
@@ -66,7 +69,9 @@
     {%- endif -%}
     {%- render 's-dom-temp' -%}
     <a class="skip-to-content-link button sr-only " href="#MainContent">{{ 'accessibility.skip_to_text' | t }}</a>
-    {%- sections 'header-group' -%}
+    {%- unless request.page_type == 'index' -%}
+      {%- sections 'header-group' -%}
+    {%- endunless -%}
     {%- endunless -%}
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
@@ -77,9 +82,11 @@
     </main>
 
     {%- unless template == 'product.only_config' and request.design_mode == false -%}
-    <footer>
-      {%- sections 'footer-group' -%}
-    </footer>
+    {%- unless request.page_type == 'index' -%}
+      <footer>
+        {%- sections 'footer-group' -%}
+      </footer>
+    {%- endunless -%}
     {%- liquid
       sections 'system-group'
       if settings.enable_compare_popup
