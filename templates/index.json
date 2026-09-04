@@ -312,7 +312,7 @@
         "fatta": {
           "type": "tab",
           "settings": {
-            "collection": "",
+            "collection": "الأكثر-مبيعاً",
             "title": "الفتة",
             "active": false
           }
@@ -320,7 +320,7 @@
         "dishes": {
           "type": "tab",
           "settings": {
-            "collection": "",
+            "collection": "أطباق",
             "image": "shopify://shop_images/d9872fccd9854843a6e34a124122a54b63f5425b.png",
             "title": "أطباق",
             "active": true
