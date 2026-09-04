@@ -10,6 +10,7 @@
 {
   "current": {
     "purchase_code": "",
+    "action_after_atc": "no",
     "color_scheme_body": "scheme-1",
     "color_focus": "#56cfe1",
     "color_scheme_dialog": "scheme-1",

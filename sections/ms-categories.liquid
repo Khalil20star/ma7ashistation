@@ -2,7 +2,7 @@
   <div class="ms-home__container">
     <h2 class="ms-home__title">{{ section.settings.heading }}</h2>
     <div class="ms-categories__carousel-shell">
-      <button class="ms-categories__arrow ms-categories__arrow--previous" type="button" data-ms-categories-previous aria-controls="MSCategoriesViewport-{{ section.id }}" aria-label="Previous categories" hidden>‹</button>
+      <button class="ms-categories__arrow ms-categories__arrow--previous" type="button" data-ms-categories-previous aria-controls="MSCategoriesViewport-{{ section.id }}" aria-label="Previous categories" hidden>></button>
       <div class="ms-categories__carousel">
         <div class="ms-categories__viewport ms-home__rail" id="MSCategoriesViewport-{{ section.id }}" data-ms-categories-viewport tabindex="0">
           <div class="ms-categories__rail" data-ms-categories-track>
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-      <button class="ms-categories__arrow ms-categories__arrow--next" type="button" data-ms-categories-next aria-controls="MSCategoriesViewport-{{ section.id }}" aria-label="Next categories" hidden>›</button>
+      <button class="ms-categories__arrow ms-categories__arrow--next" type="button" data-ms-categories-next aria-controls="MSCategoriesViewport-{{ section.id }}" aria-label="Next categories" hidden><</button>
     </div>
   </div>
 </ms-category-carousel>
