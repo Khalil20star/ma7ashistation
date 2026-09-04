@@ -1,111 +1,440 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "ms_announcement": {
       "type": "ms-announcement",
-      "settings": {"accessibility_label": "إعلان", "code": "NOW30", "text": "خصم 10% على اي طلب عن طريق الموقع — استخدم الكوبون عند الطلب", "badge": "عرض محدود"}
+      "settings": {
+        "accessibility_label": "إعلان",
+        "code": "NOW30",
+        "text": "خصم 10% على اي طلب عن طريق الموقع — استخدم الكوبون عند الطلب",
+        "badge": "عرض محدود"
+      }
     },
     "ms_header": {
       "type": "ms-header",
-      "settings": {"menu_label": "القائمة", "search_placeholder": "البحث"}
+      "settings": {
+        "menu": "",
+        "menu_label": "القائمة",
+        "search_placeholder": "البحث"
+      }
     },
     "ms_trust_desktop": {
       "type": "ms-trust-strip",
       "blocks": {
-        "delivery": {"type": "item", "settings": {"icon": "cart", "text": "توصيل خلال ساعتين"}},
-        "shipping": {"type": "item", "settings": {"icon": "clock", "text": "الشحن داخل الكويت"}},
-        "quality": {"type": "item", "settings": {"icon": "calendar", "text": "جودة مضمونة"}},
-        "fresh": {"type": "item", "settings": {"icon": "box", "text": "مكونات فريش"}}
+        "delivery": {
+          "type": "item",
+          "settings": {
+            "icon": "cart",
+            "text": "توصيل خلال ساعتين"
+          }
+        },
+        "shipping": {
+          "type": "item",
+          "settings": {
+            "icon": "clock",
+            "text": "الشحن داخل الكويت"
+          }
+        },
+        "quality": {
+          "type": "item",
+          "settings": {
+            "icon": "calendar",
+            "text": "جودة مضمونة"
+          }
+        },
+        "fresh": {
+          "type": "item",
+          "settings": {
+            "icon": "box",
+            "text": "مكونات فريش"
+          }
+        }
       },
-      "block_order": ["delivery", "shipping", "quality", "fresh"],
-      "settings": {"heading": "مميزات المتجر", "visibility": "desktop"}
+      "block_order": [
+        "delivery",
+        "shipping",
+        "quality",
+        "fresh"
+      ],
+      "settings": {
+        "heading": "مميزات المتجر",
+        "visibility": "desktop"
+      }
     },
     "ms_hero": {
       "type": "ms-hero",
-      "settings": {"accessibility_label": "محطة المحاشي الشهية — طعم يأخذك إلى عالم آخر"}
+      "settings": {
+        "accessibility_label": "محطة المحاشي الشهية — طعم يأخذك إلى عالم آخر",
+        "link": ""
+      }
     },
     "ms_trust_mobile": {
       "type": "ms-trust-strip",
       "blocks": {
-        "delivery": {"type": "item", "settings": {"icon": "cart", "text": "توصيل خلال ساعتين"}},
-        "shipping": {"type": "item", "settings": {"icon": "clock", "text": "الشحن داخل الكويت"}},
-        "quality": {"type": "item", "settings": {"icon": "calendar", "text": "جودة مضمونة"}},
-        "fresh": {"type": "item", "settings": {"icon": "box", "text": "مكونات فريش"}}
+        "delivery": {
+          "type": "item",
+          "settings": {
+            "icon": "cart",
+            "text": "توصيل خلال ساعتين"
+          }
+        },
+        "shipping": {
+          "type": "item",
+          "settings": {
+            "icon": "clock",
+            "text": "الشحن داخل الكويت"
+          }
+        },
+        "quality": {
+          "type": "item",
+          "settings": {
+            "icon": "calendar",
+            "text": "جودة مضمونة"
+          }
+        },
+        "fresh": {
+          "type": "item",
+          "settings": {
+            "icon": "box",
+            "text": "مكونات فريش"
+          }
+        }
       },
-      "block_order": ["delivery", "shipping", "quality", "fresh"],
-      "settings": {"heading": "مميزات المتجر", "visibility": "mobile"}
+      "block_order": [
+        "delivery",
+        "shipping",
+        "quality",
+        "fresh"
+      ],
+      "settings": {
+        "heading": "مميزات المتجر",
+        "visibility": "mobile"
+      }
     },
     "ms_categories": {
       "type": "ms-categories",
       "blocks": {
-        "box": {"type": "category", "settings": {"title": "بوكس تقديم", "active": false}},
-        "pots": {"type": "category", "settings": {"title": "الجدور", "active": false}},
-        "sauces": {"type": "category", "settings": {"title": "صوصات", "active": false}},
-        "desserts": {"type": "category", "settings": {"title": "حلويات مبردة", "active": false}},
-        "fatta": {"type": "category", "settings": {"title": "الفتة", "active": false}},
-        "best": {"type": "category", "settings": {"title": "الأكثر مبيعاً", "active": false}},
-        "buffets": {"type": "category", "settings": {"title": "بوفيهات", "active": false}},
-        "frozen": {"type": "category", "settings": {"title": "مفرزنات", "active": true}},
-        "dishes": {"type": "category", "settings": {"title": "أطباق", "active": false}}
+        "box": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "بوكس تقديم",
+            "active": false
+          }
+        },
+        "pots": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "الجدور",
+            "active": false
+          }
+        },
+        "sauces": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "صوصات",
+            "active": false
+          }
+        },
+        "desserts": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "حلويات مبردة",
+            "active": false
+          }
+        },
+        "fatta": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "الفتة",
+            "active": false
+          }
+        },
+        "best": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "الأكثر مبيعاً",
+            "active": false
+          }
+        },
+        "buffets": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "بوفيهات",
+            "active": false
+          }
+        },
+        "frozen": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "مفرزنات",
+            "active": true
+          }
+        },
+        "dishes": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "image": "shopify://shop_images/d9872fccd9854843a6e34a124122a54b63f5425b.png",
+            "title": "أطباق",
+            "active": false
+          }
+        }
       },
-      "block_order": ["box", "pots", "sauces", "desserts", "fatta", "best", "buffets", "frozen", "dishes"],
-      "settings": {"heading": "اطلب حسب التصنيف"}
+      "block_order": [
+        "box",
+        "pots",
+        "sauces",
+        "desserts",
+        "fatta",
+        "best",
+        "buffets",
+        "frozen",
+        "dishes"
+      ],
+      "settings": {
+        "heading": "اطلب حسب التصنيف"
+      }
     },
     "ms_best": {
       "type": "ms-best-sellers",
-      "settings": {"heading": "منتجاتنا الأكثر مبيعا", "collection": "all", "badge": "⚡ الأكثر مبيعا", "button_label": "أضف إلى السلة", "link_label": "تسوق الكل"}
+      "settings": {
+        "heading": "منتجاتنا الأكثر مبيعا",
+        "collection": "all",
+        "badge": "⚡ الأكثر مبيعا",
+        "button_label": "أضف إلى السلة",
+        "link_label": "تسوق الكل",
+        "link": ""
+      }
     },
     "ms_promos": {
       "type": "ms-promo-banners",
       "blocks": {
-        "gathering": {"type": "banner", "settings": {"heading": "عزايمج صارت أكبر وألذ", "text": "تقدر تختار الأصناف اللي تحبها على كيفج", "button": "اكتشف المزيد"}},
-        "buffet": {"type": "banner", "settings": {"heading": "بوفيه من اختيارك", "text": "تقدر تختار الأصناف اللي تحبها على كيفج", "button": "اكتشف المزيد"}}
+        "gathering": {
+          "type": "banner",
+          "settings": {
+            "heading": "عزايمج صارت أكبر وألذ",
+            "text": "تقدر تختار الأصناف اللي تحبها على كيفج",
+            "button": "اكتشف المزيد",
+            "link": ""
+          }
+        },
+        "buffet": {
+          "type": "banner",
+          "settings": {
+            "heading": "بوفيه من اختيارك",
+            "text": "تقدر تختار الأصناف اللي تحبها على كيفج",
+            "button": "اكتشف المزيد",
+            "link": ""
+          }
+        }
       },
-      "block_order": ["gathering", "buffet"],
+      "block_order": [
+        "gathering",
+        "buffet"
+      ],
       "settings": {}
     },
     "ms_featured": {
       "type": "ms-featured-products",
       "blocks": {
-        "frozen": {"type": "tab", "settings": {"title": "مفرزنات", "active": false}},
-        "box": {"type": "tab", "settings": {"title": "بوكس تقديم", "active": false}},
-        "pots": {"type": "tab", "settings": {"title": "الجدور", "active": false}},
-        "fatta": {"type": "tab", "settings": {"title": "الفتة", "active": false}},
-        "dishes": {"type": "tab", "settings": {"title": "أطباق", "active": true}}
+        "frozen": {
+          "type": "tab",
+          "settings": {
+            "collection": "",
+            "title": "مفرزنات",
+            "active": false
+          }
+        },
+        "box": {
+          "type": "tab",
+          "settings": {
+            "collection": "",
+            "title": "بوكس تقديم",
+            "active": false
+          }
+        },
+        "pots": {
+          "type": "tab",
+          "settings": {
+            "collection": "",
+            "title": "الجدور",
+            "active": false
+          }
+        },
+        "fatta": {
+          "type": "tab",
+          "settings": {
+            "collection": "",
+            "title": "الفتة",
+            "active": false
+          }
+        },
+        "dishes": {
+          "type": "tab",
+          "settings": {
+            "collection": "",
+            "title": "أطباق",
+            "active": true
+          }
+        }
       },
-      "block_order": ["frozen", "box", "pots", "fatta", "dishes"],
-      "settings": {"heading": "منتجات مميزة", "collection": "all", "badge": "جديد", "button_label": "أضف إلى السلة"}
+      "block_order": [
+        "frozen",
+        "box",
+        "pots",
+        "fatta",
+        "dishes"
+      ],
+      "settings": {
+        "heading": "منتجات مميزة",
+        "collection": "all",
+        "badge": "جديد",
+        "button_label": "أضف إلى السلة"
+      }
     },
     "ms_why": {
       "type": "ms-why-us",
       "blocks": {
-        "taste": {"type": "reason", "settings": {"icon": "star", "heading": "جودة بطعم يفرق", "text": "مكونات طازجة وتتبيلات موزونة تعطيك نكهة غنية بكل لقمة."}},
-        "package": {"type": "reason", "settings": {"icon": "box", "heading": "تغليف مرتب وآمن", "text": "تغليف عملي يحافظ على حرارة الأكل بدون تسريب."}},
-        "fast": {"type": "reason", "settings": {"icon": "truck", "heading": "توصيل سريع", "text": "بالتعاون مع جاهز وطلبات، طلبك يوصل ساخن وطازج."}},
-        "clean": {"type": "reason", "settings": {"icon": "sparkle", "heading": "نظافة بمعايير عالية", "text": "أعلى معايير النظافة داخل المطبخ لضمان سلامة طلبك."}}
+        "taste": {
+          "type": "reason",
+          "settings": {
+            "icon": "star",
+            "heading": "جودة بطعم يفرق",
+            "text": "مكونات طازجة وتتبيلات موزونة تعطيك نكهة غنية بكل لقمة."
+          }
+        },
+        "package": {
+          "type": "reason",
+          "settings": {
+            "icon": "box",
+            "heading": "تغليف مرتب وآمن",
+            "text": "تغليف عملي يحافظ على حرارة الأكل بدون تسريب."
+          }
+        },
+        "fast": {
+          "type": "reason",
+          "settings": {
+            "icon": "truck",
+            "heading": "توصيل سريع",
+            "text": "بالتعاون مع جاهز وطلبات، طلبك يوصل ساخن وطازج."
+          }
+        },
+        "clean": {
+          "type": "reason",
+          "settings": {
+            "icon": "sparkle",
+            "heading": "نظافة بمعايير عالية",
+            "text": "أعلى معايير النظافة داخل المطبخ لضمان سلامة طلبك."
+          }
+        }
       },
-      "block_order": ["taste", "package", "fast", "clean"],
-      "settings": {"heading": "ليش تختار محاشي ستيشن ؟", "text": "نجهز لك محاشي طازجة بنكهات غنية، تغليف مرتب، وتوصيل سريع يخلي طلبك يوصل ساخن ولذيذ بكل مرة."}
+      "block_order": [
+        "taste",
+        "package",
+        "fast",
+        "clean"
+      ],
+      "settings": {
+        "heading": "ليش تختار محاشي ستيشن ؟",
+        "text": "نجهز لك محاشي طازجة بنكهات غنية، تغليف مرتب، وتوصيل سريع يخلي طلبك يوصل ساخن ولذيذ بكل مرة."
+      }
     },
     "ms_offers": {
       "type": "ms-offers",
-      "settings": {"badge": "في التخفيضات", "heading": "عروض خاصة لاستكمال طلبك!", "text": "عروض محدودة الوقت. اغتنمها قبل أن تفوتك!", "tabs_label": "تصنيفات العروض", "tab_1": "مشروبات باردة", "tab_2": "الصوصات", "tab_3": "حلويات مبردة", "collection": "all", "sale_label": "في التخفيضات", "add_label": "أضف إلى السلة"}
+      "settings": {
+        "badge": "في التخفيضات",
+        "heading": "عروض خاصة لاستكمال طلبك!",
+        "text": "عروض محدودة الوقت. اغتنمها قبل أن تفوتك!",
+        "tabs_label": "تصنيفات العروض",
+        "tab_1": "مشروبات باردة",
+        "tab_1_link": "",
+        "tab_2": "الصوصات",
+        "tab_2_link": "",
+        "tab_3": "حلويات مبردة",
+        "tab_3_link": "",
+        "collection": "all",
+        "sale_label": "في التخفيضات",
+        "add_label": "أضف إلى السلة"
+      }
     },
     "ms_reviews": {
       "type": "ms-reviews",
       "blocks": {
-        "review_1": {"type": "review", "settings": {"text": "محاشي ستيشن، طازجة ولذيذة! المحاشي كلها طازة والتغليف مرتب، وصلني الأكل حار وأنيق.", "author": "فهد المنيفي", "location": "الكويت - الجهراء"}}
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "text": "محاشي ستيشن، طازجة ولذيذة! المحاشي كلها طازة والتغليف مرتب، وصلني الأكل حار وأنيق.",
+            "author": "فهد المنيفي",
+            "location": "الكويت - الجهراء"
+          }
+        }
       },
-      "block_order": ["review_1"],
-      "settings": {"badge": "شهادات العملاء", "heading": "مئات من التقييمات 5 نجوم", "summary": "أكثر من 1,500 عميل سعيد من طلباته"}
+      "block_order": [
+        "review_1"
+      ],
+      "settings": {
+        "badge": "شهادات العملاء",
+        "heading": "مئات من التقييمات 5 نجوم",
+        "summary": "أكثر من 1,500 عميل سعيد من طلباته"
+      }
     },
     "ms_videos": {
       "type": "ms-videos",
-      "settings": {"heading": "يسعدنا نشاركك أجمل اللحظات", "text": "اضغط على أي فيديو واطلب مباشرة", "collection": "all"}
+      "settings": {
+        "heading": "يسعدنا نشاركك أجمل اللحظات",
+        "text": "اضغط على أي فيديو واطلب مباشرة",
+        "collection": "all"
+      }
     },
     "ms_footer": {
       "type": "ms-footer",
-      "settings": {"description": "محاشي طازجة بنكهات غنية، تغليف مرتب، وتوصيل سريع يخلي طلبك يوصل ساخن ولذيذ.", "social_label": "تابعنا", "facebook": "/", "twitter": "/", "instagram": "/", "tiktok": "/", "categories_heading": "الأقسام", "quick_heading": "روابط سريعة", "policy_heading": "سياسات", "copyright": "محاشي ستيشن — جميع الحقوق محفوظة © 2026"}
+      "settings": {
+        "description": "محاشي طازجة بنكهات غنية، تغليف مرتب، وتوصيل سريع يخلي طلبك يوصل ساخن ولذيذ.",
+        "social_label": "تابعنا",
+        "facebook": "/",
+        "twitter": "/",
+        "instagram": "/",
+        "tiktok": "/",
+        "categories_heading": "الأقسام",
+        "categories_menu": "",
+        "quick_heading": "روابط سريعة",
+        "quick_menu": "",
+        "policy_heading": "سياسات",
+        "policy_menu": "",
+        "copyright": "محاشي ستيشن — جميع الحقوق محفوظة © 2026"
+      }
     }
   },
-  "order": ["ms_announcement", "ms_header", "ms_trust_desktop", "ms_hero", "ms_trust_mobile", "ms_categories", "ms_best", "ms_promos", "ms_featured", "ms_why", "ms_offers", "ms_reviews", "ms_videos", "ms_footer"]
+  "order": [
+    "ms_announcement",
+    "ms_header",
+    "ms_trust_desktop",
+    "ms_hero",
+    "ms_trust_mobile",
+    "ms_categories",
+    "ms_best",
+    "ms_promos",
+    "ms_featured",
+    "ms_why",
+    "ms_offers",
+    "ms_reviews",
+    "ms_videos",
+    "ms_footer"
+  ]
 }
