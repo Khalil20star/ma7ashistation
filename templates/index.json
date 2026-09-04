@@ -126,6 +126,7 @@
           "type": "category",
           "settings": {
             "collection": "",
+            "image": "shopify://shop_images/d9872fccd9854843a6e34a124122a54b63f5425b.png",
             "title": "بوكس تقديم",
             "compact_label": true,
             "active": false
@@ -136,6 +137,7 @@
           "settings": {
             "collection": "",
             "title": "الجدور",
+            "compact_label": false,
             "active": false
           }
         },
@@ -144,6 +146,7 @@
           "settings": {
             "collection": "",
             "title": "صوصات",
+            "compact_label": false,
             "active": false
           }
         },
@@ -161,6 +164,7 @@
           "settings": {
             "collection": "",
             "title": "الفتة",
+            "compact_label": false,
             "active": false
           }
         },
@@ -169,6 +173,7 @@
           "settings": {
             "collection": "",
             "title": "الأكثر مبيعاً",
+            "compact_label": false,
             "active": false
           }
         },
@@ -177,6 +182,7 @@
           "settings": {
             "collection": "",
             "title": "بوفيهات",
+            "compact_label": false,
             "active": false
           }
         },
@@ -185,6 +191,7 @@
           "settings": {
             "collection": "",
             "title": "مفرزنات",
+            "compact_label": false,
             "active": true
           }
         },
@@ -194,6 +201,7 @@
             "collection": "",
             "image": "shopify://shop_images/d9872fccd9854843a6e34a124122a54b63f5425b.png",
             "title": "أطباق",
+            "compact_label": false,
             "active": false
           }
         }
