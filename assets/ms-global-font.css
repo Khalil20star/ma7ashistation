@@ -34,3 +34,43 @@ shopify-account {
   --shopify-account-font-heading: "Tajawal", sans-serif;
   --shopify-account-font-body: "Tajawal", sans-serif;
 }
+
+@keyframes ms-add-to-cart-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+button[type="submit"][name="add"]:not(.hdt-btn-loading__svg) {
+  position: relative;
+}
+
+button[type="submit"][name="add"]:not(.hdt-btn-loading__svg)[aria-busy="true"] {
+  pointer-events: none;
+  cursor: wait;
+  font-size: 0 !important;
+}
+
+button[type="submit"][name="add"]:not(.hdt-btn-loading__svg)[aria-busy="true"] > * {
+  opacity: 0 !important;
+}
+
+button[type="submit"][name="add"]:not(.hdt-btn-loading__svg)[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ms-add-to-cart-spin 0.65s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button[type="submit"][name="add"]:not(.hdt-btn-loading__svg)[aria-busy="true"]::after {
+    animation-duration: 1.4s;
+  }
+}
