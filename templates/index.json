@@ -151,7 +151,7 @@
             "image": "shopify://shop_images/d9872fccd9854843a6e34a124122a54b63f5425b.png",
             "title": "بوكس تقديم",
             "compact_label": true,
-            "active": false
+            "active": true
           }
         },
         "pots": {
@@ -214,7 +214,7 @@
             "collection": "",
             "title": "مفرزنات",
             "compact_label": false,
-            "active": true
+            "active": false
           }
         },
         "dishes": {
