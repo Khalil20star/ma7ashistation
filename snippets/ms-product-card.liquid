@@ -25,10 +25,12 @@
       <strong>{% if card_variant %}{{ card_variant.price | money_without_trailing_zeros }}{% else %}4.75KD{% endif %}</strong>
     </div>
     {%- if card_product != blank -%}
-      {%- form 'product', card_product, class: 'ms-product-card__form' -%}
-        <input type="hidden" name="id" value="{{ card_variant.id }}">
-        <button type="submit" name="add" {% unless card_variant.available %}disabled{% endunless %}>{{ button_label | default: 'أضف إلى السلة' }}</button>
-      {%- endform -%}
+      <wrapp-hdt-pr-frm class="hdt-contents">
+        {%- form 'product', card_product, class: 'ms-product-card__form' -%}
+          <input type="hidden" name="id" value="{{ card_variant.id }}">
+          <button type="submit" name="add" {% unless card_variant.available %}disabled{% endunless %}>{{ button_label | default: 'أضف إلى السلة' }}</button>
+        {%- endform -%}
+      </wrapp-hdt-pr-frm>
     {%- else -%}
       <a class="ms-product-card__button" href="{{ routes.all_products_collection_url }}">{{ button_label | default: 'أضف إلى السلة' }}</a>
     {%- endif -%}
