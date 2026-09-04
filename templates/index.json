@@ -37,10 +37,10 @@
     "ms_categories": {
       "type": "ms-categories",
       "blocks": {
-        "box": {"type": "category", "settings": {"title": "بوكس تقديم", "active": false}},
+        "box": {"type": "category", "settings": {"title": "بوكس تقديم", "compact_label": true, "active": false}},
         "pots": {"type": "category", "settings": {"title": "الجدور", "active": false}},
         "sauces": {"type": "category", "settings": {"title": "صوصات", "active": false}},
-        "desserts": {"type": "category", "settings": {"title": "حلويات مبردة", "active": false}},
+        "desserts": {"type": "category", "settings": {"title": "حلويات مبردة", "compact_label": true, "active": false}},
         "fatta": {"type": "category", "settings": {"title": "الفتة", "active": false}},
         "best": {"type": "category", "settings": {"title": "الأكثر مبيعاً", "active": false}},
         "buffets": {"type": "category", "settings": {"title": "بوفيهات", "active": false}},
