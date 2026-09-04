@@ -1,30 +1,142 @@
-<section class="ms-home ms-categories">
+<ms-category-carousel class="ms-home ms-categories" role="region" aria-labelledby="MSCategoriesHeading-{{ section.id }}">
   <div class="ms-home__container">
-    <h2 class="ms-home__title">{{ section.settings.heading }}</h2>
-    <div class="ms-categories__viewport ms-home__rail">
-      <div class="ms-categories__rail">
-        {%- for block in section.blocks -%}
-          {%- liquid
-            assign pill_collection = block.settings.collection
-            assign pill_image = block.settings.image | default: pill_collection.featured_image
-            assign pill_title = block.settings.title | default: pill_collection.title
-            if pill_image == blank
-              assign pill_image = collections.all.products[forloop.index0].featured_image
-            endif
-          -%}
-          <a class="ms-categories__pill{% if block.settings.active %} is-active{% endif %}{% if block.settings.compact_label %} is-compact{% endif %}" href="{{ pill_collection.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
-            {%- if pill_image != blank -%}{{ pill_image | image_url: width: 100 | image_tag: loading: 'lazy', width: 39, height: 39, alt: pill_title }}{%- endif -%}
-            <b>{{ pill_title }}</b><span aria-hidden="true">&gt;</span>
-          </a>
-        {%- endfor -%}
+    <h2 class="ms-home__title" id="MSCategoriesHeading-{{ section.id }}">{{ section.settings.heading }}</h2>
+    <div class="ms-categories__carousel">
+      <div class="ms-categories__viewport ms-home__rail" id="MSCategoriesViewport-{{ section.id }}" data-ms-categories-viewport tabindex="0">
+        <div class="ms-categories__rail" data-ms-categories-track>
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign pill_collection = block.settings.collection
+              assign pill_image = block.settings.image | default: pill_collection.featured_image
+              assign pill_title = block.settings.title | default: pill_collection.title
+              if pill_image == blank
+                assign pill_image = collections.all.products[forloop.index0].featured_image
+              endif
+            -%}
+            <a class="ms-categories__pill{% if block.settings.active %} is-active{% endif %}{% if block.settings.compact_label %} is-compact{% endif %}" href="{{ pill_collection.url | default: routes.all_products_collection_url }}" data-ms-category-item data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+              <b>{{ pill_title }}</b><span aria-hidden="true">&gt;</span>
+              {%- if pill_image != blank -%}{{ pill_image | image_url: width: 100 | image_tag: loading: 'lazy', width: 39, height: 39, alt: pill_title }}{%- endif -%}
+            </a>
+          {%- endfor -%}
+        </div>
       </div>
+      <button class="ms-categories__arrow ms-categories__arrow--previous" type="button" data-ms-categories-previous aria-controls="MSCategoriesViewport-{{ section.id }}" aria-label="Previous categories" hidden>›</button>
+      <button class="ms-categories__arrow ms-categories__arrow--next" type="button" data-ms-categories-next aria-controls="MSCategoriesViewport-{{ section.id }}" aria-label="Next categories" hidden>‹</button>
     </div>
   </div>
-</section>
+</ms-category-carousel>
+
+<script>
+  if (!customElements.get('ms-category-carousel')) {
+    customElements.define('ms-category-carousel', class extends HTMLElement {
+      connectedCallback() {
+        if (this.abortController) return;
+
+        this.abortController = new AbortController();
+        this.viewport = this.querySelector('[data-ms-categories-viewport]');
+        this.track = this.querySelector('[data-ms-categories-track]');
+        this.items = Array.from(this.querySelectorAll('[data-ms-category-item]'));
+        this.previousButton = this.querySelector('[data-ms-categories-previous]');
+        this.nextButton = this.querySelector('[data-ms-categories-next]');
+        this.currentIndex = 0;
+        this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!this.viewport || !this.track || this.items.length < 1) return;
+
+        this.previousButton?.addEventListener('click', () => this.move(-1), {
+          signal: this.abortController.signal
+        });
+        this.nextButton?.addEventListener('click', () => this.move(1), {
+          signal: this.abortController.signal
+        });
+
+        this.viewport.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            this.move(-1);
+          } else if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            this.move(1);
+          }
+        }, { signal: this.abortController.signal });
+
+        this.viewport.addEventListener('scroll', () => {
+          window.cancelAnimationFrame(this.scrollFrame);
+          this.scrollFrame = window.requestAnimationFrame(() => this.updateState());
+        }, { signal: this.abortController.signal, passive: true });
+
+        document.addEventListener('shopify:block:select', (event) => {
+          const selectedItem = this.items.find((item) => item.dataset.blockId === event.detail.blockId);
+          if (selectedItem) this.scrollToItem(this.items.indexOf(selectedItem));
+        }, { signal: this.abortController.signal });
+
+        if ('ResizeObserver' in window) {
+          this.resizeObserver = new ResizeObserver(() => this.updateState());
+          this.resizeObserver.observe(this.viewport);
+          this.resizeObserver.observe(this.track);
+        }
+
+        this.updateState();
+      }
+
+      disconnectedCallback() {
+        this.abortController?.abort();
+        this.resizeObserver?.disconnect();
+        window.cancelAnimationFrame(this.scrollFrame);
+        this.abortController = null;
+      }
+
+      move(direction) {
+        const itemWidth = this.items[0].getBoundingClientRect().width;
+        const gap = parseFloat(window.getComputedStyle(this.track).columnGap) || 0;
+        const visibleItems = Math.max(1, Math.floor(this.viewport.clientWidth / (itemWidth + gap)));
+        const targetIndex = Math.max(0, Math.min(this.currentIndex + (direction * visibleItems), this.items.length - 1));
+        this.scrollToItem(targetIndex);
+      }
+
+      scrollToItem(index) {
+        const item = this.items[index];
+        if (!item) return;
+
+        this.currentIndex = index;
+        item.scrollIntoView({
+          behavior: this.reducedMotion ? 'auto' : 'smooth',
+          block: 'nearest',
+          inline: 'start'
+        });
+      }
+
+      updateState() {
+        const canScroll = this.viewport.scrollWidth > this.viewport.clientWidth + 1;
+        [this.previousButton, this.nextButton].forEach((button) => {
+          if (button) button.hidden = !canScroll;
+        });
+        if (!canScroll) return;
+
+        const viewportRect = this.viewport.getBoundingClientRect();
+        let closestIndex = 0;
+        let closestDistance = Number.POSITIVE_INFINITY;
+
+        this.items.forEach((item, itemIndex) => {
+          const distance = Math.abs(item.getBoundingClientRect().right - viewportRect.right);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = itemIndex;
+          }
+        });
+
+        this.currentIndex = closestIndex;
+        const lastRect = this.items[this.items.length - 1].getBoundingClientRect();
+        this.previousButton.disabled = closestIndex === 0;
+        this.nextButton.disabled = lastRect.left >= viewportRect.left - 1;
+      }
+    });
+  }
+</script>
 {% stylesheet %}
 .ms-categories{height:184px;overflow:hidden;border-bottom:1px solid rgba(31,66,61,.2);background:#fafafa}.ms-categories>.ms-home__container{height:100%;padding-top:40px;padding-bottom:36px}.ms-categories .ms-home__title{line-height:26px}.ms-categories__viewport{width:calc(100% + 14px);height:58px;margin:24px -7px 0;overflow:hidden}.ms-categories__rail{display:flex;width:max-content;height:58px;align-items:center;gap:9.9px;padding:3px 20.65px;direction:ltr}.ms-categories__pill{display:flex;width:139.19px;height:52.01px;flex:0 0 139.19px;align-items:center;justify-content:center;gap:7.38px;padding:5.9px;border:.74px solid #ddeae2;border-radius:44.27px;background:#fff;color:#1f423d;direction:ltr}.ms-categories__pill.is-active{background:rgba(221,234,226,.7)}.ms-categories__pill img{width:38.73px;height:38.73px;flex:0 0 38.73px;border:1.48px solid #ddeae2;border-radius:50%;object-fit:cover}.ms-categories__pill b{direction:rtl;font-size:14px;font-weight:700;line-height:normal;white-space:nowrap}.ms-categories__pill span{color:rgba(27,77,46,.2);direction:ltr;font-size:14px;font-weight:800;line-height:1}.ms-categories__pill.is-compact b,.ms-categories__pill.is-compact span{font-size:12px}@media(max-width:767px){.ms-categories{height:130px}.ms-categories>.ms-home__container{padding-top:16px;padding-bottom:14px}.ms-categories .ms-home__title{line-height:26px}.ms-categories__viewport{width:calc(100% + 32px);height:58px;margin:16px -16px 0}.ms-categories__rail{height:58px;gap:8.45px;padding:2.49px 0;transform:translateX(-387.11px)}.ms-categories__pill{width:137.51px;height:51.38px;flex-basis:137.51px;gap:7.29px;padding:5.83px;border-width:.73px;border-radius:43.73px}.ms-categories__pill img{width:38.26px;height:38.26px;flex-basis:38.26px;border-width:1.46px}.ms-categories__pill b,.ms-categories__pill span{font-size:13.83px}.ms-categories__pill.is-compact b,.ms-categories__pill.is-compact span{font-size:11.86px}}
-.ms-categories__rail{margin-left:auto;direction:rtl}@media(max-width:767px){.ms-categories__rail{transform:none}}
+.ms-categories{display:block}.ms-categories__carousel{position:relative;width:calc(100% + 14px);height:58px;margin:24px -7px 0}.ms-categories__viewport{width:100%;height:58px;margin:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-inline:contain;scroll-behavior:smooth;scroll-snap-type:inline mandatory}.ms-categories__rail{margin-left:auto;direction:rtl}.ms-categories__pill{scroll-snap-align:start}.ms-categories__arrow{position:absolute;z-index:2;top:50%;display:grid;width:32px;height:32px;padding:0;place-items:center;border:1px solid #dbe4de;border-radius:50%;background:rgba(255,255,255,.94);box-shadow:0 2px 8px rgba(0,0,0,.1);color:#1f423d;font-size:23px;line-height:1;cursor:pointer;transform:translateY(-50%)}.ms-categories__arrow--previous{right:4px}.ms-categories__arrow--next{left:4px}.ms-categories__arrow:disabled{opacity:.35;cursor:default}.ms-categories__arrow[hidden]{display:none}.ms-categories__arrow:focus-visible{outline:2px solid #1f423d;outline-offset:2px}@media(max-width:767px){.ms-categories__carousel{width:calc(100% + 32px);margin:16px -16px 0}.ms-categories__rail{transform:none}.ms-categories__arrow{width:28px;height:28px;font-size:20px}}
 {% endstylesheet %}
 {% schema %}
-{"name":"MS — Categories","max_blocks":12,"settings":[{"type":"text","id":"heading","label":"Heading","default":"اطلب حسب التصنيف"}],"blocks":[{"type":"category","name":"Category","settings":[{"type":"collection","id":"collection","label":"Collection"},{"type":"image_picker","id":"image","label":"Custom image"},{"type":"text","id":"title","label":"Title"},{"type":"checkbox","id":"compact_label","label":"Compact label","info":"Use the smaller Figma label size for longer titles.","default":false},{"type":"checkbox","id":"active","label":"Highlighted","default":false}]}],"presets":[{"name":"MS — Categories","blocks":[{"type":"category","settings":{"title":"بوكس تقديم","compact_label":true}},{"type":"category","settings":{"title":"الجدور"}},{"type":"category","settings":{"title":"صوصات"}},{"type":"category","settings":{"title":"حلويات مبردة","compact_label":true}},{"type":"category","settings":{"title":"الفتة"}},{"type":"category","settings":{"title":"الأكثر مبيعاً"}},{"type":"category","settings":{"title":"بوفيهات"}},{"type":"category","settings":{"title":"مفرزنات","active":true}},{"type":"category","settings":{"title":"أطباق"}}]}]}
+{"name":"MS — Categories","max_blocks":30,"settings":[{"type":"text","id":"heading","label":"Heading","default":"اطلب حسب التصنيف"}],"blocks":[{"type":"category","name":"Category","settings":[{"type":"collection","id":"collection","label":"Collection"},{"type":"image_picker","id":"image","label":"Custom image"},{"type":"text","id":"title","label":"Title"},{"type":"checkbox","id":"compact_label","label":"Compact label","info":"Use the smaller Figma label size for longer titles.","default":false},{"type":"checkbox","id":"active","label":"Highlighted","default":false}]}],"presets":[{"name":"MS — Categories","blocks":[{"type":"category","settings":{"title":"بوكس تقديم","compact_label":true}},{"type":"category","settings":{"title":"الجدور"}},{"type":"category","settings":{"title":"صوصات"}},{"type":"category","settings":{"title":"حلويات مبردة","compact_label":true}},{"type":"category","settings":{"title":"الفتة"}},{"type":"category","settings":{"title":"الأكثر مبيعاً"}},{"type":"category","settings":{"title":"بوفيهات"}},{"type":"category","settings":{"title":"مفرزنات","active":true}},{"type":"category","settings":{"title":"أطباق"}}]}]}
 {% endschema %}
