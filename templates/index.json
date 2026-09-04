@@ -71,8 +71,30 @@
     },
     "ms_hero": {
       "type": "ms-hero",
+      "blocks": {
+        "slide_whtAG4": {
+          "type": "slide",
+          "settings": {
+            "accessibility_label": "محطة المحاشي الشهية — طعم يأخذك إلى عالم آخر",
+            "link": ""
+          }
+        },
+        "slide_Ey7WWy": {
+          "type": "slide",
+          "settings": {
+            "accessibility_label": "محطة المحاشي الشهية — طعم يأخذك إلى عالم آخر",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_whtAG4",
+        "slide_Ey7WWy"
+      ],
       "settings": {
         "accessibility_label": "محطة المحاشي الشهية — طعم يأخذك إلى عالم آخر",
+        "autoplay": true,
+        "change_slides_speed": 5,
         "link": ""
       }
     },
