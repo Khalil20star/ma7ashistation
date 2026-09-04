@@ -226,6 +226,26 @@
             "compact_label": false,
             "active": false
           }
+        },
+        "category_gNk47G": {
+          "type": "category",
+          "settings": {
+            "collection": "الأكثر-مبيعاً",
+            "image": "shopify://shop_images/d9872fccd9854843a6e34a124122a54b63f5425b.png",
+            "title": "أطباق",
+            "compact_label": false,
+            "active": false
+          }
+        },
+        "category_tyULJM": {
+          "type": "category",
+          "settings": {
+            "collection": "الأكثر-مبيعاً",
+            "image": "shopify://shop_images/d9872fccd9854843a6e34a124122a54b63f5425b.png",
+            "title": "أطباق",
+            "compact_label": false,
+            "active": false
+          }
         }
       },
       "block_order": [
@@ -237,7 +257,9 @@
         "best",
         "buffets",
         "frozen",
-        "dishes"
+        "dishes",
+        "category_gNk47G",
+        "category_tyULJM"
       ],
       "settings": {
         "heading": "اطلب حسب التصنيف"
