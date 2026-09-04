@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap");
+
+:root {
+  --f_family_1: "Tajawal", sans-serif;
+  --f_family_2: "Tajawal", sans-serif;
+  --f_family_3: "Tajawal", sans-serif;
+  --f_family_4: "Tajawal", sans-serif;
+  --f_family_5: "Tajawal", sans-serif;
+  --font-body-family: "Tajawal", sans-serif;
+  --font-heading-family: "Tajawal", sans-serif;
+  --font-sheading-family: "Tajawal", sans-serif;
+}
+
+html,
+body,
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: "Tajawal", sans-serif;
+}
+
+.hdt-btn {
+  --hdt-btn-font-family: "Tajawal", sans-serif;
+}
+
+[style*="--ff"] {
+  --ff: "Tajawal", sans-serif !important;
+}
+
+shopify-account {
+  --shopify-account-font-heading: "Tajawal", sans-serif;
+  --shopify-account-font-body: "Tajawal", sans-serif;
+}
