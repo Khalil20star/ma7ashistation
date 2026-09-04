@@ -140,7 +140,7 @@
         "store_qA8xK7"
       ],
       "settings": {
-        "access_token": "pk.eyJ1IjoibmhvY2xlb3BybyIsImEiOiJja3pncWhsaXUxNDBiMnducnN1cWZsNmZwIn0.7RBTwnj9Dl_SPhKDcY0rYw",
+        "access_token": "put your mapbox access token here",
         "enable_searchbox": true,
         "style_map": "streets",
         "zoom": 12,
