@@ -1,6 +1,6 @@
-<ms-category-carousel class="ms-home ms-categories" role="region" aria-labelledby="MSCategoriesHeading-{{ section.id }}">
+<ms-category-carousel class="ms-home ms-categories">
   <div class="ms-home__container">
-    <h2 class="ms-home__title" id="MSCategoriesHeading-{{ section.id }}">{{ section.settings.heading }}</h2>
+    <h2 class="ms-home__title">{{ section.settings.heading }}</h2>
     <div class="ms-categories__carousel">
       <div class="ms-categories__viewport ms-home__rail" id="MSCategoriesViewport-{{ section.id }}" data-ms-categories-viewport tabindex="0">
         <div class="ms-categories__rail" data-ms-categories-track>
@@ -14,8 +14,8 @@
               endif
             -%}
             <a class="ms-categories__pill{% if block.settings.active %} is-active{% endif %}{% if block.settings.compact_label %} is-compact{% endif %}" href="{{ pill_collection.url | default: routes.all_products_collection_url }}" data-ms-category-item data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
-              <b>{{ pill_title }}</b><span aria-hidden="true">&gt;</span>
               {%- if pill_image != blank -%}{{ pill_image | image_url: width: 100 | image_tag: loading: 'lazy', width: 39, height: 39, alt: pill_title }}{%- endif -%}
+              <b>{{ pill_title }}</b><span aria-hidden="true">&gt;</span>
             </a>
           {%- endfor -%}
         </div>
