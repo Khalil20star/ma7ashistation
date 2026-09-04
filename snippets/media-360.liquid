@@ -12,23 +12,14 @@
     assign images = product.media | slice: index, product.media.size
   endif
   
-  # Auto-detect RTL based on locale (Arabic, Hebrew, Persian, Urdu, Yiddish, etc.)
-  # To manually override, pass rtl parameter: render 'media-360', rtl: true
-  assign rtl_locales = 'ar,he,fa,ur,yi' | split: ','
-  assign current_locale = request.locale.iso_code | slice: 0, 2
-  assign is_rtl = rtl
-  unless is_rtl != blank
-    assign is_rtl = false
-    if rtl_locales contains current_locale
-      assign is_rtl = true
-    endif
-  endunless
+  # The storefront is globally RTL, including 360-degree drag and scrub controls.
+  assign is_rtl = true
 -%}
 {%- if type == 'media' -%}
   <div class="{{ class }} hdt-product__media-item">
     <div class="hdt-ratio hdt-product__media hdt-media-360-container" style="--aspect-ratioapt:{{ preview_image.aspect_ratio | default: 1 }};--mw-media: {{ preview_image.width }}px">
       {%- comment -%}
-        data-rtl: Auto-detected for Right-to-Left languages (Arabic, Hebrew, Persian, Urdu, etc.)
+        data-rtl: Uses the storefront's global Right-to-Left direction.
         data-button-step: Number of frames to move when clicking prev/next buttons (default: 2)
         data-button-step-speed: Milliseconds between frames during button animation (default: 60)
           - Lower value = faster animation (e.g., 40ms for quick)

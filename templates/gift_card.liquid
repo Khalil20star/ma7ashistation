@@ -1,23 +1,10 @@
 {% layout none %}
 <!doctype html>
   {%- liquid
-    assign iso_code  = request.locale.iso_code
-    assign config_rtl  = settings.right_to_left | default: 'enable-with-list'
-    assign is_rtl = false
-    assign dir = 'ltr'
-    if config_rtl == 'enable-with-list'
-      assign iso_code_ck = iso_code | split: '-' | first | append: ';' | prepend: ';'
-      assign lis_rtl = ';ae;ar;arc;bqi;ckb;dv;fa;glk;ha;he;kwh;ks;ku;mzn;nqo;pnb;ps;sd;ug;ur;yi;'
-      if lis_rtl contains iso_code_ck
-        assign is_rtl = true
-        assign dir = 'rtl'
-      endif
-    elsif config_rtl == 'enable'
-      assign is_rtl = true
-      assign dir = 'rtl'
-    endif
+    assign is_rtl = true
+    assign dir = 'rtl'
   -%}
-<html lang="{{ request.locale.iso_code }}" class="hdt-badge__shape-{{ settings.badge_shape }} dir--{{ dir }}" dir--{{ dir }} >
+<html lang="{{ request.locale.iso_code }}" class="hdt-badge__shape-{{ settings.badge_shape }} dir--{{ dir }}" dir="{{ dir }}">
   <head>
     <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
     <meta charset="utf-8">

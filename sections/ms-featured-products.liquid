@@ -44,7 +44,7 @@
         {%- endfor -%}
       </div>
     </div>
-    <div class="ms-featured__products-viewport ms-home__rail">
+    <div class="ms-featured__products-viewport ms-home__rail" aria-live="polite">
       {%- if section.blocks.size > 0 -%}
         {%- for block in section.blocks -%}
           {%- assign panel_collection = block.settings.collection | default: fallback_collection -%}
@@ -82,7 +82,7 @@
       {%- endif -%}
     </div>
     <div class="ms-featured__dots" role="group" aria-label="Product pages">
-      <button class="ms-featured__arrow" type="button" data-ms-featured-prev aria-label="Previous products">‹</button>
+      <button class="ms-featured__arrow" type="button" data-ms-featured-prev aria-label="Previous products">›</button>
       {%- for page_index in (0..2) -%}
         <button
           class="ms-featured__dot{% if page_index == 0 %} is-active{% endif %}"
@@ -92,7 +92,7 @@
           aria-current="{% if page_index == 0 %}true{% else %}false{% endif %}"
         ></button>
       {%- endfor -%}
-      <button class="ms-featured__arrow" type="button" data-ms-featured-next aria-label="Next products">›</button>
+      <button class="ms-featured__arrow" type="button" data-ms-featured-next aria-label="Next products">‹</button>
     </div>
   </div>
 </ms-featured-products>
@@ -187,10 +187,15 @@
         const activePanel = this.panels.find((panel) => !panel.hidden);
         if (!activePanel) return;
 
-        const productCount = activePanel.querySelectorAll('.ms-product-card').length;
-        const pageCount = Math.max(1, Math.min(Math.ceil(productCount / 4), this.pageButtons.length));
+        const productCards = Array.from(activePanel.querySelectorAll('.ms-product-card'));
+        const pageCount = Math.max(1, Math.min(Math.ceil(productCards.length / 4), this.pageButtons.length));
         this.currentPage = (pageIndex + pageCount) % pageCount;
-        activePanel.style.setProperty('--ms-featured-offset', `${this.currentPage * -1376}px`);
+
+        const firstProduct = this.currentPage * 4;
+        const lastProduct = firstProduct + 4;
+        productCards.forEach((card, cardIndex) => {
+          card.hidden = cardIndex < firstProduct || cardIndex >= lastProduct;
+        });
 
         this.pageButtons.forEach((button, buttonIndex) => {
           const active = buttonIndex === this.currentPage;
@@ -208,6 +213,7 @@
 </script>
 {% stylesheet %}
 .ms-featured{display:block;height:770px;overflow:hidden;background:#fafafa}.ms-featured>.ms-home__container{height:100%;padding-top:40px;padding-bottom:40px}.ms-featured .ms-home__title{line-height:26px}.ms-featured__tabs-viewport{height:72px;margin-top:24px;overflow:hidden;border-radius:60px;background:#eff4f1}.ms-featured__tabs{display:flex;height:72px;align-items:center;justify-content:space-around;direction:ltr}.ms-featured__tab{display:flex;min-width:144px;height:56px;align-items:center;justify-content:center;gap:10px;padding:6px 18px;border:0;border-radius:50px;background:transparent;color:inherit;direction:rtl;cursor:pointer}.ms-featured__tab.is-active{background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.08)}.ms-featured__tab:focus-visible{outline:2px solid #1f423d;outline-offset:2px}.ms-featured__tab img{width:44px;height:44px;border-radius:50%;object-fit:cover}.ms-featured__tab b{font-size:14px;font-weight:700;white-space:nowrap}.ms-featured__products-viewport,.ms-featured__panel{height:511px}.ms-featured__products-viewport{margin-top:24px;overflow:hidden}.ms-featured__panel[hidden]{display:none}.ms-featured__products{display:flex;width:max-content;gap:16px;direction:ltr;transform:translate3d(var(--ms-featured-offset,0px),0,0);transition:transform .4s ease}.ms-featured__products>.ms-product-card{direction:rtl}.ms-featured__dots{display:flex;width:max-content;min-width:91px;height:9px;margin:24px auto 0;align-items:center;justify-content:center;gap:8px;direction:ltr}.ms-featured__dots button{display:block;padding:0;border:0;cursor:pointer}.ms-featured__arrow{width:7px;height:18px;background:transparent;color:#aaa;font-size:20px;line-height:9px}.ms-featured__arrow:disabled{opacity:.35;cursor:default}.ms-featured__dot{width:9px;height:9px;border-radius:50%;background:#ccc;transition:width .2s ease,background-color .2s ease}.ms-featured__dot.is-active{width:26px;border-radius:5px;background:#1f423d}.ms-featured__dot[hidden]{display:none}.ms-featured__dots button:focus-visible{outline:2px solid #1f423d;outline-offset:3px}@media(prefers-reduced-motion:reduce){.ms-featured__products,.ms-featured__dot{transition:none}}@media(max-width:767px){.ms-featured{height:409px}.ms-featured>.ms-home__container{padding:0}.ms-featured .ms-home__title{height:50px;padding:16px;line-height:26px}.ms-featured__tabs-viewport{width:100%;height:78px;margin:0;border-radius:0;background:#fff}.ms-featured__tabs{width:1020px;height:58px;margin-top:10px;justify-content:flex-start;gap:8.45px;transform:translateX(-102.56px)}.ms-featured__tab{min-width:137.51px;height:51.38px;padding:5.83px 10px;border:.73px solid #dbe4de}.ms-featured__tab img{width:38.26px;height:38.26px}.ms-featured__tab b{font-size:13.83px}.ms-featured__tab:nth-child(2) b{font-size:12px}.ms-featured__products-viewport{width:100%;height:270px;margin:0;padding:12px 16px 8px}.ms-featured__panel{height:250px}.ms-featured__products{height:250px;gap:3.66px;transform:translateX(-137px)}.ms-featured__dots{display:none}}
+.ms-featured__tabs,.ms-featured__products{margin-left:auto}.ms-featured__tabs,.ms-featured__products,.ms-featured__dots{direction:rtl}.ms-featured__products{transform:none}.ms-featured__products>.ms-product-card[hidden]{display:none}@media(max-width:767px){.ms-featured__tabs,.ms-featured__products{transform:none}}
 {% endstylesheet %}
 {% schema %}
 {"name":"MS — Featured products","max_blocks":6,"settings":[{"type":"text","id":"heading","label":"Heading","default":"منتجات مميزة"},{"type":"collection","id":"collection","label":"Fallback products collection","info":"Used only when a tab does not have its own collection selected."},{"type":"text","id":"badge","label":"Product badge","default":"جديد"},{"type":"text","id":"button_label","label":"Add button","default":"أضف إلى السلة"}],"blocks":[{"type":"tab","name":"Collection tab","settings":[{"type":"collection","id":"collection","label":"Products collection"},{"type":"image_picker","id":"image","label":"Custom image"},{"type":"text","id":"title","label":"Tab title"},{"type":"checkbox","id":"active","label":"Initially selected","default":false}]}],"presets":[{"name":"MS — Featured products","blocks":[{"type":"tab","settings":{"title":"مفرزنات"}},{"type":"tab","settings":{"title":"بوكس تقديم"}},{"type":"tab","settings":{"title":"الجدور"}},{"type":"tab","settings":{"title":"الفتة"}},{"type":"tab","settings":{"title":"أطباق","active":true}}]}]}

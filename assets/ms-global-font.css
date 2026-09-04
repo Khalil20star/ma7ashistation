@@ -18,6 +18,7 @@ input,
 optgroup,
 select,
 textarea {
+  direction: rtl;
   font-family: "Tajawal", sans-serif;
 }
 
