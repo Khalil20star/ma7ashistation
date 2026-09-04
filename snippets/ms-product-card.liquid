@@ -2,6 +2,11 @@
   assign card_product = product
   assign card_variant = card_product.selected_or_first_available_variant
   assign card_image = card_product.featured_media.preview_image | default: card_product.featured_image
+  assign card_badge = badge | default: '⚡ الأكثر مبيعا'
+  assign sale_badge = false
+  if card_badge contains '⚡'
+    assign sale_badge = true
+  endif
 -%}
 <article class="ms-product-card">
   <a class="ms-product-card__media" href="{{ card_product.url | default: routes.all_products_collection_url }}">
@@ -10,7 +15,7 @@
     {%- else -%}
       {{ 'product-1' | placeholder_svg_tag: 'ms-product-card__image ms-product-card__placeholder' }}
     {%- endif -%}
-    <span class="ms-product-card__badge">{{ badge | default: '⚡ الأكثر مبيعا' }}</span>
+    <span class="ms-product-card__badge{% if sale_badge %} is-sale{% endif %}">{{ card_badge }}</span>
   </a>
   <div class="ms-product-card__body">
     <div class="ms-product-card__rating" aria-label="5 من 5 نجوم"><span>(7)</span><b>★★★★★</b></div>

@@ -1,37 +1,159 @@
-{%- assign featured_collection = section.settings.collection | default: collections.all -%}
-<section class="ms-home ms-featured">
+{%- liquid
+  assign fallback_collection = section.settings.collection | default: collections.all
+  assign active_tab_id = ''
+
+  for block in section.blocks
+    if active_tab_id == blank and block.settings.active
+      assign active_tab_id = block.id
+    endif
+  endfor
+
+  if active_tab_id == blank and section.blocks.size > 0
+    assign active_tab_id = section.blocks.first.id
+  endif
+-%}
+<ms-featured-products class="ms-home ms-featured" data-section-id="{{ section.id }}">
   <div class="ms-home__container">
     <h2 class="ms-home__title">{{ section.settings.heading }}</h2>
     <div class="ms-featured__tabs-viewport ms-home__rail">
-      <div class="ms-featured__tabs">
+      <div class="ms-featured__tabs" role="tablist" aria-label="{{ section.settings.heading }}">
         {%- for block in section.blocks -%}
           {%- liquid
-            assign tab_collection = block.settings.collection
+            assign tab_collection = block.settings.collection | default: fallback_collection
             assign tab_image = block.settings.image | default: tab_collection.featured_image
+            assign tab_title = block.settings.title | default: tab_collection.title
             if tab_image == blank
               assign tab_image = collections.all.products[forloop.index0].featured_image
             endif
           -%}
-          <a class="ms-featured__tab{% if block.settings.active %} is-active{% endif %}" href="{{ tab_collection.url | default: routes.all_products_collection_url }}" {{ block.shopify_attributes }}>
-            <b>{{ block.settings.title | default: tab_collection.title }}</b>
-            {%- if tab_image != blank -%}{{ tab_image | image_url: width: 100 | image_tag: loading: 'lazy', width: 44, height: 44, alt: block.settings.title }}{%- endif -%}
-          </a>
+          <button
+            class="ms-featured__tab{% if block.id == active_tab_id %} is-active{% endif %}"
+            type="button"
+            id="MSFeaturedTab-{{ section.id }}-{{ block.id }}"
+            role="tab"
+            aria-controls="MSFeaturedPanel-{{ section.id }}-{{ block.id }}"
+            aria-selected="{% if block.id == active_tab_id %}true{% else %}false{% endif %}"
+            tabindex="{% if block.id == active_tab_id %}0{% else %}-1{% endif %}"
+            data-ms-featured-tab="{{ block.id }}"
+            data-block-id="{{ block.id }}"
+            {{ block.shopify_attributes }}
+          >
+            <b>{{ tab_title }}</b>
+            {%- if tab_image != blank -%}{{ tab_image | image_url: width: 100 | image_tag: loading: 'lazy', width: 44, height: 44, alt: tab_title }}{%- endif -%}
+          </button>
         {%- endfor -%}
       </div>
     </div>
     <div class="ms-featured__products-viewport ms-home__rail">
-      <div class="ms-featured__products">
-        {%- for product in featured_collection.products limit: 4 -%}
-          {% render 'ms-product-card', product: product, badge: section.settings.badge, button_label: section.settings.button_label %}
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- assign panel_collection = block.settings.collection | default: fallback_collection -%}
+          <div
+            class="ms-featured__panel{% if block.id == active_tab_id %} is-active{% endif %}"
+            id="MSFeaturedPanel-{{ section.id }}-{{ block.id }}"
+            role="tabpanel"
+            aria-labelledby="MSFeaturedTab-{{ section.id }}-{{ block.id }}"
+            data-ms-featured-panel="{{ block.id }}"
+            {% unless block.id == active_tab_id %}hidden{% endunless %}
+          >
+            <div class="ms-featured__products">
+              {%- for product in panel_collection.products limit: 4 -%}
+                {% render 'ms-product-card', product: product, badge: section.settings.badge, button_label: section.settings.button_label %}
+              {%- else -%}
+                {%- for placeholder_index in (1..4) -%}
+                  {% render 'ms-product-card', product: blank, badge: section.settings.badge, button_label: section.settings.button_label %}
+                {%- endfor -%}
+              {%- endfor -%}
+            </div>
+          </div>
         {%- endfor -%}
-      </div>
+      {%- else -%}
+        <div class="ms-featured__panel is-active">
+          <div class="ms-featured__products">
+            {%- for product in fallback_collection.products limit: 4 -%}
+              {% render 'ms-product-card', product: product, badge: section.settings.badge, button_label: section.settings.button_label %}
+            {%- else -%}
+              {%- for placeholder_index in (1..4) -%}
+                {% render 'ms-product-card', product: blank, badge: section.settings.badge, button_label: section.settings.button_label %}
+              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
     </div>
     <div class="ms-featured__dots" aria-hidden="true"><i>‹</i><i></i><i></i><i></i><i>›</i></div>
   </div>
-</section>
+</ms-featured-products>
+
+<script>
+  if (!customElements.get('ms-featured-products')) {
+    customElements.define('ms-featured-products', class extends HTMLElement {
+      connectedCallback() {
+        if (this.abortController) return;
+
+        this.abortController = new AbortController();
+        this.tabs = Array.from(this.querySelectorAll('[data-ms-featured-tab]'));
+        this.panels = Array.from(this.querySelectorAll('[data-ms-featured-panel]'));
+
+        this.tabs.forEach((tab, tabIndex) => {
+          tab.addEventListener('click', () => this.activate(tab.dataset.msFeaturedTab), {
+            signal: this.abortController.signal
+          });
+
+          tab.addEventListener('keydown', (event) => {
+            let nextIndex;
+
+            if (event.key === 'ArrowRight') nextIndex = tabIndex + 1;
+            if (event.key === 'ArrowLeft') nextIndex = tabIndex - 1;
+            if (event.key === 'Home') nextIndex = 0;
+            if (event.key === 'End') nextIndex = this.tabs.length - 1;
+            if (nextIndex === undefined) return;
+
+            event.preventDefault();
+            const nextTab = this.tabs[(nextIndex + this.tabs.length) % this.tabs.length];
+            this.activate(nextTab.dataset.msFeaturedTab, true);
+          }, { signal: this.abortController.signal });
+        });
+
+        document.addEventListener('shopify:block:select', (event) => {
+          const selectedTab = this.tabs.find((tab) => tab.dataset.blockId === event.detail.blockId);
+          if (selectedTab) this.activate(selectedTab.dataset.msFeaturedTab);
+        }, { signal: this.abortController.signal });
+
+        const selectedTab = this.tabs.find((tab) => tab.getAttribute('aria-selected') === 'true') || this.tabs[0];
+        if (selectedTab) this.activate(selectedTab.dataset.msFeaturedTab);
+      }
+
+      disconnectedCallback() {
+        this.abortController?.abort();
+        this.abortController = null;
+      }
+
+      activate(tabId, moveFocus = false) {
+        const activeTab = this.tabs.find((tab) => tab.dataset.msFeaturedTab === tabId);
+        if (!activeTab) return;
+
+        this.tabs.forEach((tab) => {
+          const active = tab === activeTab;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', String(active));
+          tab.tabIndex = active ? 0 : -1;
+        });
+
+        this.panels.forEach((panel) => {
+          const active = panel.dataset.msFeaturedPanel === tabId;
+          panel.classList.toggle('is-active', active);
+          panel.hidden = !active;
+        });
+
+        if (moveFocus) activeTab.focus({ preventScroll: true });
+      }
+    });
+  }
+</script>
 {% stylesheet %}
-.ms-featured{height:770px;overflow:hidden;background:#fafafa}.ms-featured>.ms-home__container{height:100%;padding-top:40px;padding-bottom:40px}.ms-featured__tabs-viewport{height:72px;margin-top:8px;overflow:hidden;border-radius:60px;background:#eff4f1}.ms-featured__tabs{display:flex;height:72px;align-items:center;justify-content:space-around;direction:ltr}.ms-featured__tab{display:flex;min-width:144px;height:56px;align-items:center;justify-content:center;gap:10px;padding:6px 18px;border-radius:50px;direction:rtl}.ms-featured__tab.is-active{background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.08)}.ms-featured__tab img{width:44px;height:44px;border-radius:50%;object-fit:cover}.ms-featured__tab b{font-size:14px;font-weight:700;white-space:nowrap}.ms-featured__products-viewport{height:511px;margin-top:24px;overflow:hidden}.ms-featured__products{display:flex;gap:16px;direction:ltr}.ms-featured__products>.ms-product-card{direction:rtl}.ms-featured__dots{display:flex;width:91px;height:9px;margin:24px auto 0;align-items:center;justify-content:center;gap:8px;color:#aaa;font-size:20px;direction:ltr}.ms-featured__dots i{display:block;width:9px;height:9px;border-radius:50%;background:#ccc;font-style:normal;line-height:7px}.ms-featured__dots i:nth-child(4){width:26px;border-radius:5px;background:#1f423d}.ms-featured__dots i:first-child,.ms-featured__dots i:last-child{width:5px;background:transparent}@media(max-width:767px){.ms-featured{height:409px}.ms-featured>.ms-home__container{padding:0}.ms-featured .ms-home__title{height:50px;padding:16px}.ms-featured__tabs-viewport{width:100%;height:78px;margin:0;border-radius:0;background:#fff}.ms-featured__tabs{width:1020px;height:58px;margin-top:10px;justify-content:flex-start;gap:8.45px;transform:translateX(-394px)}.ms-featured__tab{min-width:139px;height:52px;padding:6px 10px;border:1px solid #dbe4de}.ms-featured__tab img{width:38.3px;height:38.3px}.ms-featured__tab b{font-size:12px}.ms-featured__products-viewport{width:100%;height:270px;margin:0;padding:12px 16px 8px}.ms-featured__products{width:max-content;height:250px;gap:3.65px;transform:translateX(-137px)}.ms-featured__dots{display:none}}
+.ms-featured{display:block;height:770px;overflow:hidden;background:#fafafa}.ms-featured>.ms-home__container{height:100%;padding-top:40px;padding-bottom:40px}.ms-featured .ms-home__title{line-height:26px}.ms-featured__tabs-viewport{height:72px;margin-top:24px;overflow:hidden;border-radius:60px;background:#eff4f1}.ms-featured__tabs{display:flex;height:72px;align-items:center;justify-content:space-around;direction:ltr}.ms-featured__tab{display:flex;min-width:144px;height:56px;align-items:center;justify-content:center;gap:10px;padding:6px 18px;border:0;border-radius:50px;background:transparent;color:inherit;direction:rtl;cursor:pointer}.ms-featured__tab.is-active{background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.08)}.ms-featured__tab:focus-visible{outline:2px solid #1f423d;outline-offset:2px}.ms-featured__tab img{width:44px;height:44px;border-radius:50%;object-fit:cover}.ms-featured__tab b{font-size:14px;font-weight:700;white-space:nowrap}.ms-featured__products-viewport,.ms-featured__panel{height:511px}.ms-featured__products-viewport{margin-top:24px;overflow:hidden}.ms-featured__panel[hidden]{display:none}.ms-featured__products{display:flex;gap:16px;direction:ltr}.ms-featured__products>.ms-product-card{direction:rtl}.ms-featured__dots{display:flex;width:91px;height:9px;margin:24px auto 0;align-items:center;justify-content:center;gap:8px;color:#aaa;font-size:20px;direction:ltr}.ms-featured__dots i{display:block;width:9px;height:9px;border-radius:50%;background:#ccc;font-style:normal;line-height:7px}.ms-featured__dots i:nth-child(4){width:26px;border-radius:5px;background:#1f423d}.ms-featured__dots i:first-child,.ms-featured__dots i:last-child{width:5px;background:transparent}@media(max-width:767px){.ms-featured{height:409px}.ms-featured>.ms-home__container{padding:0}.ms-featured .ms-home__title{height:50px;padding:16px;line-height:26px}.ms-featured__tabs-viewport{width:100%;height:78px;margin:0;border-radius:0;background:#fff}.ms-featured__tabs{width:1020px;height:58px;margin-top:10px;justify-content:flex-start;gap:8.45px;transform:translateX(-102.56px)}.ms-featured__tab{min-width:137.51px;height:51.38px;padding:5.83px 10px;border:.73px solid #dbe4de}.ms-featured__tab img{width:38.26px;height:38.26px}.ms-featured__tab b{font-size:13.83px}.ms-featured__tab:nth-child(2) b{font-size:12px}.ms-featured__products-viewport{width:100%;height:270px;margin:0;padding:12px 16px 8px}.ms-featured__panel{height:250px}.ms-featured__products{width:max-content;height:250px;gap:3.66px;transform:translateX(-137px)}.ms-featured__dots{display:none}}
 {% endstylesheet %}
 {% schema %}
-{"name":"MS — Featured products","max_blocks":6,"settings":[{"type":"text","id":"heading","label":"Heading","default":"منتجات مميزة"},{"type":"collection","id":"collection","label":"Products collection"},{"type":"text","id":"badge","label":"Product badge","default":"جديد"},{"type":"text","id":"button_label","label":"Add button","default":"أضف إلى السلة"}],"blocks":[{"type":"tab","name":"Category tab","settings":[{"type":"collection","id":"collection","label":"Collection"},{"type":"image_picker","id":"image","label":"Custom image"},{"type":"text","id":"title","label":"Title"},{"type":"checkbox","id":"active","label":"Active","default":false}]}],"presets":[{"name":"MS — Featured products","blocks":[{"type":"tab","settings":{"title":"مفرزنات"}},{"type":"tab","settings":{"title":"بوكس تقديم"}},{"type":"tab","settings":{"title":"الجدور"}},{"type":"tab","settings":{"title":"الفتة"}},{"type":"tab","settings":{"title":"أطباق","active":true}}]}]}
+{"name":"MS — Featured products","max_blocks":6,"settings":[{"type":"text","id":"heading","label":"Heading","default":"منتجات مميزة"},{"type":"collection","id":"collection","label":"Fallback products collection","info":"Used only when a tab does not have its own collection selected."},{"type":"text","id":"badge","label":"Product badge","default":"جديد"},{"type":"text","id":"button_label","label":"Add button","default":"أضف إلى السلة"}],"blocks":[{"type":"tab","name":"Collection tab","settings":[{"type":"collection","id":"collection","label":"Products collection"},{"type":"image_picker","id":"image","label":"Custom image"},{"type":"text","id":"title","label":"Tab title"},{"type":"checkbox","id":"active","label":"Initially selected","default":false}]}],"presets":[{"name":"MS — Featured products","blocks":[{"type":"tab","settings":{"title":"مفرزنات"}},{"type":"tab","settings":{"title":"بوكس تقديم"}},{"type":"tab","settings":{"title":"الجدور"}},{"type":"tab","settings":{"title":"الفتة"}},{"type":"tab","settings":{"title":"أطباق","active":true}}]}]}
 {% endschema %}
