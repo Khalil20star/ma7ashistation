@@ -89,10 +89,16 @@
       }
 
       move(direction) {
-        const itemWidth = this.items[0].getBoundingClientRect().width;
-        const gap = parseFloat(window.getComputedStyle(this.track).columnGap) || 0;
-        const visibleItems = Math.max(1, Math.floor(this.viewport.clientWidth / (itemWidth + gap)));
-        const targetIndex = Math.max(0, Math.min(this.currentIndex + (direction * visibleItems), this.items.length - 1));
+        let targetIndex;
+
+        if (direction > 0 && this.atEnd) {
+          targetIndex = 0;
+        } else if (direction < 0 && this.atStart) {
+          targetIndex = this.items.length - 1;
+        } else {
+          targetIndex = Math.max(0, Math.min(this.currentIndex + direction, this.items.length - 1));
+        }
+
         this.scrollToItem(targetIndex);
       }
 
@@ -101,6 +107,8 @@
         if (!item) return;
 
         this.currentIndex = index;
+        this.atStart = index === 0;
+        this.atEnd = index === this.items.length - 1;
         item.scrollIntoView({
           behavior: this.reducedMotion ? 'auto' : 'smooth',
           block: 'nearest',
@@ -129,8 +137,10 @@
 
         this.currentIndex = closestIndex;
         const lastRect = this.items[this.items.length - 1].getBoundingClientRect();
-        this.previousButton.disabled = closestIndex === 0;
-        this.nextButton.disabled = lastRect.left >= viewportRect.left - 1;
+        this.atStart = closestIndex === 0;
+        this.atEnd = lastRect.left >= viewportRect.left - 1;
+        this.previousButton.disabled = false;
+        this.nextButton.disabled = false;
       }
     });
   }
