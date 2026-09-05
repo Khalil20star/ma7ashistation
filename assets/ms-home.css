@@ -1032,3 +1032,22 @@
 .hdt-page-type-index .ms-touch-scroll-rtl > * {
   direction: rtl;
 }
+
+/* Let mobile browsers track the finger and provide momentum. No card/page snap. */
+@media (max-width: 767px) {
+  .hdt-page-type-index :is(.ms-best__viewport, .ms-featured__products-viewport, .ms-offers__viewport, .ms-videos__viewport) {
+    overflow-x: auto;
+    overflow-y: hidden;
+    touch-action: auto;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    direction: rtl;
+  }
+
+  .hdt-page-type-index :is(.ms-best__grid, .ms-featured__products, .ms-offers__grid, .ms-videos__track) > * {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
+}

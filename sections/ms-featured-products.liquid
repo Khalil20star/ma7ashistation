@@ -177,7 +177,12 @@
             signal: this.abortController.signal,
           });
 
-          window.addEventListener('resize', () => this.showPage(0), {
+          this.viewportWidth = window.innerWidth;
+          window.addEventListener('resize', () => {
+            if (this.viewportWidth === window.innerWidth) return;
+            this.viewportWidth = window.innerWidth;
+            this.showPage(0);
+          }, {
             signal: this.abortController.signal,
           });
 
@@ -221,6 +226,8 @@
           });
 
           this.showPage(0);
+          const viewport = this.querySelector('.ms-featured__products-viewport');
+          if (viewport) viewport.scrollLeft = 0;
           if (moveFocus) activeTab.focus({ preventScroll: true });
         }
 
@@ -229,6 +236,23 @@
           if (!activePanel) return;
 
           const productCards = Array.from(activePanel.querySelectorAll('.ms-product-card'));
+          // Mobile is one continuous native RTL rail, not separate product pages.
+          if (window.matchMedia('(max-width: 767px)').matches) {
+            this.currentPage = 0;
+            productCards.forEach((card) => {
+              card.hidden = false;
+              card.inert = false;
+              card.removeAttribute('aria-hidden');
+            });
+            this.pageButtons.forEach((button) => {
+              button.hidden = true;
+              button.classList.toggle('is-active', false);
+              button.setAttribute('aria-current', 'false');
+            });
+            if (this.previousButton) this.previousButton.disabled = true;
+            if (this.nextButton) this.nextButton.disabled = true;
+            return;
+          }
           const productsPerPage = window.matchMedia('(max-width: 899px)').matches
             ? 2
             : window.matchMedia('(max-width: 1199px)').matches
@@ -242,15 +266,10 @@
 
           const firstProduct = this.currentPage * productsPerPage;
           const lastProduct = firstProduct + productsPerPage;
-          const showPreview = window.matchMedia('(max-width: 767px)').matches;
           productCards.forEach((card, cardIndex) => {
-            // Keep a glimpse of the next card on mobile without adding an off-page
-            // tab stop. Dots and LTR swipes still advance two products at a time.
-            const preview = showPreview && cardIndex === lastProduct;
-            card.hidden = cardIndex < firstProduct || (cardIndex >= lastProduct && !preview);
-            card.inert = preview;
-            if (preview) card.setAttribute('aria-hidden', 'true');
-            else card.removeAttribute('aria-hidden');
+            card.hidden = cardIndex < firstProduct || cardIndex >= lastProduct;
+            card.inert = false;
+            card.removeAttribute('aria-hidden');
           });
 
           this.pageButtons.forEach((button, buttonIndex) => {
