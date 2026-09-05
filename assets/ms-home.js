@@ -93,7 +93,7 @@
       }
 
       if (event.cancelable) event.preventDefault();
-      setLogicalScrollLeft(rail, rtlScrollType, state.startScrollPosition - distanceX);
+      setLogicalScrollLeft(rail, rtlScrollType, state.startScrollPosition + distanceX);
     }, { passive: false });
 
     rail.addEventListener('touchend', () => {
@@ -170,7 +170,7 @@
         state.suppressClickUntil = performance.now() + 350;
         if (Math.abs(distanceX) >= PAGE_THRESHOLD) {
           const component = viewport.closest('ms-featured-products');
-          const step = distanceX < 0 ? 1 : -1;
+          const step = distanceX > 0 ? 1 : -1;
           component?.showPage?.(component.currentPage + step);
         }
       }
