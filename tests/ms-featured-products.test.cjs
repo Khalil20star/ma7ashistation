@@ -9,10 +9,12 @@ const script = source.match(/<script>([\s\S]*?)<\/script>/)[1];
 
 function element() {
   const attributes = new Map();
+  const classes = new Set();
   return {
     hidden: false,
     inert: false,
-    classList: { toggle() {} },
+    classes,
+    classList: { toggle: (name, enabled) => enabled ? classes.add(name) : classes.delete(name) },
     setAttribute: (key, value) => attributes.set(key, value),
     removeAttribute: (key) => attributes.delete(key),
     getAttribute: (key) => attributes.get(key),
@@ -114,4 +116,6 @@ test('switching collections resets pagination and does not expose the previous p
   assert.equal(nextCards.filter(card => !card.hidden && !card.inert).length, 5);
   assert.equal(component.pageButtons.filter(button => !button.hidden).length, 0);
   assert.equal(rail.scrollLeft, 0);
+  assert.equal(component.panels[1].classes.has('is-entering'), true);
+  assert.match(source, /@media \(prefers-reduced-motion: reduce\)/);
 });

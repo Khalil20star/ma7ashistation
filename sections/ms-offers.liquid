@@ -141,6 +141,7 @@
       activate(tabId, moveFocus = false) {
         const activeTab = this.tabs.find(tab => tab.dataset.msOffersTab === tabId);
         const activePanel = this.panels.find(panel => panel.dataset.msOffersPanel === tabId);
+        const previousPanel = this.panels.find(panel => !panel.hidden);
         if (!activeTab || !activePanel) return;
 
         this.tabs.forEach(tab => {
@@ -152,7 +153,15 @@
         this.panels.forEach(panel => { panel.hidden = panel !== activePanel; });
         // Reuse the existing rail so its LTR swipe handlers remain attached.
         if (this.viewport) this.viewport.scrollLeft = 0;
+        if (previousPanel && previousPanel !== activePanel) this.animatePanel(activePanel);
         if (moveFocus) activeTab.focus({ preventScroll: true });
+      }
+
+      animatePanel(panel) {
+        panel.classList.toggle('is-entering', false);
+        // Force a fresh animation when the user changes tabs rapidly.
+        void panel.offsetWidth;
+        panel.classList.toggle('is-entering', true);
       }
     });
   }
@@ -228,6 +237,17 @@
   }
   .ms-offers__panel[hidden] {
     display: none;
+  }
+  .ms-offers__panel.is-entering :is(.ms-offers__item, .ms-offers__empty) {
+    animation: ms-offers-item-enter 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .ms-offers__panel.is-entering .ms-offers__item:nth-child(2) { animation-delay: 25ms; }
+  .ms-offers__panel.is-entering .ms-offers__item:nth-child(3) { animation-delay: 50ms; }
+  .ms-offers__panel.is-entering .ms-offers__item:nth-child(4) { animation-delay: 75ms; }
+  .ms-offers__panel.is-entering .ms-offers__item:nth-child(n + 5) { animation-delay: 100ms; }
+  @keyframes ms-offers-item-enter {
+    from { opacity: 0; transform: translateY(10px) scale(0.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
   .ms-offers__empty {
     margin: 0;
@@ -394,6 +414,11 @@
     .ms-offers__form button {
       width: 32px;
       height: 32px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ms-offers__panel.is-entering :is(.ms-offers__item, .ms-offers__empty) {
+      animation: none;
     }
   }
   .ms-offers__tabs {

@@ -38,6 +38,7 @@ function fixture() {
   const panels = [1, 2, 3].map(index => {
     const panel = new Element();
     panel.dataset.msOffersPanel = String(index);
+    panel.hidden = index !== 3;
     panel.products = index === 2 ? [] : [`collection-${index}-product`];
     return panel;
   });
@@ -64,10 +65,21 @@ test('clicking each tab swaps only its products without navigation or replacing 
     assert.equal(panels.filter(panel => !panel.hidden).length, 1);
     assert.equal(tab.getAttribute('aria-selected'), 'true');
     assert.equal(tab.classes.has('is-active'), true);
+    if (index !== 2) assert.equal(panels[index].classes.has('is-entering'), true);
     assert.equal(viewport.scrollLeft, 0);
     assert.equal(component.viewport, viewport);
     panels.forEach((panel, panelIndex) => assert.equal(panel.products, originalProducts[panelIndex]));
   });
+});
+
+test('category changes animate products but initial setup does not', () => {
+  const { component, panels } = fixture();
+  assert.equal(panels[2].classes.has('is-entering'), false);
+  component.activate('1');
+  assert.equal(panels[0].classes.has('is-entering'), true);
+  component.activate('2');
+  assert.equal(panels[1].classes.has('is-entering'), true);
+  assert.match(source, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
 test('an empty collection remains selected instead of exposing another collection', () => {
