@@ -83,13 +83,14 @@
     </div>
     <div class="ms-featured__dots" role="group" aria-label="Product pages">
       <button class="ms-featured__arrow" type="button" data-ms-featured-prev aria-label="Previous products">›</button>
-      {%- for page_index in (0..2) -%}
+      {%- for page_index in (0..5) -%}
         <button
           class="ms-featured__dot{% if page_index == 0 %} is-active{% endif %}"
           type="button"
           data-ms-featured-page="{{ page_index }}"
           aria-label="Product page {{ page_index | plus: 1 }}"
           aria-current="{% if page_index == 0 %}true{% else %}false{% endif %}"
+          {% if page_index > 2 %}hidden{% endif %}
         ></button>
       {%- endfor -%}
       <button class="ms-featured__arrow" type="button" data-ms-featured-next aria-label="Next products">‹</button>
@@ -144,6 +145,10 @@
           signal: this.abortController.signal
         });
 
+        window.addEventListener('resize', () => this.showPage(0), {
+          signal: this.abortController.signal
+        });
+
         document.addEventListener('shopify:block:select', (event) => {
           const selectedTab = this.tabs.find((tab) => tab.dataset.blockId === event.detail.blockId);
           if (selectedTab) this.activate(selectedTab.dataset.msFeaturedTab);
@@ -188,11 +193,16 @@
         if (!activePanel) return;
 
         const productCards = Array.from(activePanel.querySelectorAll('.ms-product-card'));
-        const pageCount = Math.max(1, Math.min(Math.ceil(productCards.length / 4), this.pageButtons.length));
+        const productsPerPage = window.matchMedia('(max-width: 899px)').matches
+          ? 2
+          : window.matchMedia('(max-width: 1199px)').matches
+            ? 3
+            : 4;
+        const pageCount = Math.max(1, Math.min(Math.ceil(productCards.length / productsPerPage), this.pageButtons.length));
         this.currentPage = (pageIndex + pageCount) % pageCount;
 
-        const firstProduct = this.currentPage * 4;
-        const lastProduct = firstProduct + 4;
+        const firstProduct = this.currentPage * productsPerPage;
+        const lastProduct = firstProduct + productsPerPage;
         productCards.forEach((card, cardIndex) => {
           card.hidden = cardIndex < firstProduct || cardIndex >= lastProduct;
         });
