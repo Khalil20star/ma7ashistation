@@ -20,7 +20,9 @@
         },
         "tax_rkEdFK": {
           "type": "tax",
-          "settings": {}
+          "settings": {
+            "url": ""
+          }
         },
         "agree_y3A6EM": {
           "type": "agree",
@@ -74,9 +76,11 @@
         "show_shipping_estimator": true,
         "show_cart_discount": true,
         "discount_error_message": "Enter a valid discount code",
+        "show_cart_complementary": true,
         "heading": "Customers also bought",
         "product_list": [],
-        "replaces_products_selected": true
+        "replaces_products_selected": true,
+        "limit": 5
       }
     },
     "toolbar-mobile": {
@@ -125,189 +129,6 @@
         "color_scheme": "",
         "background_opacity": 1,
         "show_txt": true
-      }
-    },
-    "exit_popup_AH3cpU": {
-      "type": "exit-popup",
-      "blocks": {
-        "heading_7Lb9dC": {
-          "type": "heading",
-          "name": "t:blocks.heading.name",
-          "settings": {
-            "heading": "<p>Wait! before you leave...</p>",
-            "hidden_br_mobile": false,
-            "hidden_on_mobile": false,
-            "line_height": "hdt-lh-1-2",
-            "font_weight": "semibold",
-            "heading_size": "h_custom",
-            "text_color": "hdt-s-text",
-            "font_size_heading_lg": 32,
-            "font_size_heading": 24,
-            "letter_spacing_heading": 0
-          },
-          "blocks": {}
-        },
-        "spacer_RfUUwh": {
-          "type": "spacer",
-          "settings": {
-            "direction": false,
-            "space_lg": 4,
-            "space_md": 4,
-            "space": 4
-          },
-          "blocks": {}
-        },
-        "text_nPhfBP": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Get 15% off for your first order</p>",
-            "hidden_br_mobile": false,
-            "hidden_on_mobile": false,
-            "ffamily": "",
-            "text_size": "base",
-            "line_height": "",
-            "font_weight": "normal",
-            "text_color": "hdt-s-text",
-            "countdown": "2025-12-30 15:00:00",
-            "txt_day": "days",
-            "font_size_text_lg": 16,
-            "font_size_text": 14,
-            "letter_spacing_text": 0
-          },
-          "blocks": {}
-        },
-        "spacer_PreXCM": {
-          "type": "spacer",
-          "settings": {
-            "direction": false,
-            "space_lg": 30,
-            "space_md": 30,
-            "space": 30
-          },
-          "blocks": {}
-        },
-        "discount_mVX7fh": {
-          "type": "_discount",
-          "name": "t:sections.exit_popup.blocks.discount.name",
-          "settings": {
-            "discount": "CODE15OFF"
-          },
-          "blocks": {}
-        },
-        "spacer_zbydXP": {
-          "type": "spacer",
-          "settings": {
-            "direction": false,
-            "space_lg": 30,
-            "space_md": 30,
-            "space": 30
-          },
-          "blocks": {}
-        },
-        "text_UtXaiC": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Use above code to get 15% 0FF for your first order when checkout</p>",
-            "hidden_br_mobile": false,
-            "hidden_on_mobile": false,
-            "ffamily": "",
-            "text_size": "base",
-            "line_height": "",
-            "font_weight": "normal",
-            "text_color": "hdt-s-text",
-            "countdown": "2025-12-30 15:00:00",
-            "txt_day": "days",
-            "font_size_text_lg": 16,
-            "font_size_text": 14,
-            "letter_spacing_text": 0
-          },
-          "blocks": {}
-        },
-        "spacer_CNjkFU": {
-          "type": "spacer",
-          "name": "t:blocks.spacer.name",
-          "settings": {
-            "direction": false,
-            "space_lg": 20,
-            "space_md": 20,
-            "space": 20
-          },
-          "blocks": {}
-        },
-        "button_bTit9U": {
-          "type": "button",
-          "name": "t:blocks.button.name",
-          "settings": {
-            "label": "GRAB THE DISCOUNT",
-            "link": "shopify://collections/sale",
-            "open_in_new_tab": false,
-            "full_width": false,
-            "btn_style": "hdt-btn-accent",
-            "size": "custom custom-inline",
-            "font_weight": "semibold",
-            "font_size_btn": 18,
-            "padding_btn": 50,
-            "min_width_btn": 100,
-            "min_width_dt_btn": 100,
-            "min_height_btn": 30,
-            "icon": "none",
-            "icon_position": "after",
-            "icon_height": 14,
-            "icon_spacing": 5
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "heading_7Lb9dC",
-        "spacer_RfUUwh",
-        "text_nPhfBP",
-        "spacer_PreXCM",
-        "discount_mVX7fh",
-        "spacer_zbydXP",
-        "text_UtXaiC",
-        "spacer_CNjkFU",
-        "button_bTit9U"
-      ],
-      "name": "t:sections.exit_popup.name",
-      "settings": {
-        "color_scheme": "scheme-77e4ef58-56a9-4631-876a-12098ba7d57d",
-        "heading": "Recommended Products",
-        "color_scheme_pr": "",
-        "image": "shopify://shop_images/Rectangle_3.jpg",
-        "collections": "",
-        "product_list": [
-          "mookis-yoga-mat-bag",
-          "anti-slip-exercise-yoga-mat-cyan",
-          "beach-babe-malibu-bikini",
-          "copy-of-light-pink-yoga-pant"
-        ],
-        "limit": 8,
-        "image_ratio": "adapt_image",
-        "after": "move_cursor",
-        "time_delay": 2,
-        "day_next": 7,
-        "index": true,
-        "product": false,
-        "collection": false,
-        "article": false,
-        "blog": false,
-        "cart": false,
-        "page": false
-      }
-    },
-    "cookies_8EMjkp": {
-      "type": "cookies",
-      "name": "t:sections.cookies.name",
-      "settings": {
-        "colors_by_section": false,
-        "color_scheme": "",
-        "show": "2",
-        "text": "We use cookies to improve your experience on our website. By browsing this website, you agree to our use of cookies.",
-        "accept": "Accept",
-        "decline": "Decline",
-        "more": "More info",
-        "links": ""
       }
     },
     "newsletter_modal_Gxkjz4": {
@@ -442,7 +263,6 @@
       "settings": {
         "colors_by_section": false,
         "color_scheme": "",
-        "image": "shopify://shop_images/04_1296x_1ee4b6db-25d2-45f5-ad8c-fd28f404f0e6.jpg",
         "direction": "ver",
         "after": "scroll",
         "time_delay": 2,
@@ -454,8 +274,6 @@
   "order": [
     "cart-drawer",
     "toolbar-mobile",
-    "exit_popup_AH3cpU",
-    "cookies_8EMjkp",
     "newsletter_modal_Gxkjz4"
   ]
 }
