@@ -39,7 +39,13 @@
             {{ block.shopify_attributes }}
           >
             <b>{{ tab_title }}</b>
-            {%- if tab_image != blank -%}{{ tab_image | image_url: width: 100 | image_tag: loading: 'lazy', width: 44, height: 44, alt: tab_title }}{%- endif -%}
+            {%- if tab_image != blank -%}
+              {{
+                tab_image
+                | image_url: width: 100
+                | image_tag: loading: 'lazy', width: 44, height: 44, alt: tab_title
+              }}
+            {%- endif -%}
           </button>
         {%- endfor -%}
       </div>
@@ -54,14 +60,24 @@
             role="tabpanel"
             aria-labelledby="MSFeaturedTab-{{ section.id }}-{{ block.id }}"
             data-ms-featured-panel="{{ block.id }}"
-            {% unless block.id == active_tab_id %}hidden{% endunless %}
+            {% unless block.id == active_tab_id %}
+              hidden
+            {% endunless %}
           >
             <div class="ms-featured__products">
               {%- for product in panel_collection.products limit: 12 -%}
-                {% render 'ms-product-card', product: product, badge: section.settings.badge, button_label: section.settings.button_label %}
+                {% render 'ms-product-card',
+                  product: product,
+                  badge: section.settings.badge,
+                  button_label: section.settings.button_label
+                %}
               {%- else -%}
                 {%- for placeholder_index in (1..4) -%}
-                  {% render 'ms-product-card', product: blank, badge: section.settings.badge, button_label: section.settings.button_label %}
+                  {% render 'ms-product-card',
+                    product: blank,
+                    badge: section.settings.badge,
+                    button_label: section.settings.button_label
+                  %}
                 {%- endfor -%}
               {%- endfor -%}
             </div>
@@ -71,10 +87,18 @@
         <div class="ms-featured__panel is-active" data-ms-featured-panel="fallback">
           <div class="ms-featured__products">
             {%- for product in fallback_collection.products limit: 12 -%}
-              {% render 'ms-product-card', product: product, badge: section.settings.badge, button_label: section.settings.button_label %}
+              {% render 'ms-product-card',
+                product: product,
+                badge: section.settings.badge,
+                button_label: section.settings.button_label
+              %}
             {%- else -%}
               {%- for placeholder_index in (1..4) -%}
-                {% render 'ms-product-card', product: blank, badge: section.settings.badge, button_label: section.settings.button_label %}
+                {% render 'ms-product-card',
+                  product: blank,
+                  badge: section.settings.badge,
+                  button_label: section.settings.button_label
+                %}
               {%- endfor -%}
             {%- endfor -%}
           </div>
@@ -90,7 +114,9 @@
           data-ms-featured-page="{{ page_index }}"
           aria-label="Product page {{ page_index | plus: 1 }}"
           aria-current="{% if page_index == 0 %}true{% else %}false{% endif %}"
-          {% if page_index > 2 %}hidden{% endif %}
+          {% if page_index > 2 %}
+            hidden
+          {% endif %}
         ></button>
       {%- endfor -%}
       <button class="ms-featured__arrow" type="button" data-ms-featured-next aria-label="Next products">‹</button>
@@ -100,138 +126,408 @@
 
 <script>
   if (!customElements.get('ms-featured-products')) {
-    customElements.define('ms-featured-products', class extends HTMLElement {
-      connectedCallback() {
-        if (this.abortController) return;
+    customElements.define(
+      'ms-featured-products',
+      class extends HTMLElement {
+        connectedCallback() {
+          if (this.abortController) return;
 
-        this.abortController = new AbortController();
-        this.tabs = Array.from(this.querySelectorAll('[data-ms-featured-tab]'));
-        this.panels = Array.from(this.querySelectorAll('[data-ms-featured-panel]'));
-        this.pageButtons = Array.from(this.querySelectorAll('[data-ms-featured-page]'));
-        this.previousButton = this.querySelector('[data-ms-featured-prev]');
-        this.nextButton = this.querySelector('[data-ms-featured-next]');
-        this.currentPage = 0;
+          this.abortController = new AbortController();
+          this.tabs = Array.from(this.querySelectorAll('[data-ms-featured-tab]'));
+          this.panels = Array.from(this.querySelectorAll('[data-ms-featured-panel]'));
+          this.pageButtons = Array.from(this.querySelectorAll('[data-ms-featured-page]'));
+          this.previousButton = this.querySelector('[data-ms-featured-prev]');
+          this.nextButton = this.querySelector('[data-ms-featured-next]');
+          this.currentPage = 0;
 
-        this.tabs.forEach((tab, tabIndex) => {
-          tab.addEventListener('click', () => this.activate(tab.dataset.msFeaturedTab), {
-            signal: this.abortController.signal
+          this.tabs.forEach((tab, tabIndex) => {
+            tab.addEventListener('click', () => this.activate(tab.dataset.msFeaturedTab), {
+              signal: this.abortController.signal,
+            });
+
+            tab.addEventListener(
+              'keydown',
+              (event) => {
+                let nextIndex;
+
+                if (event.key === 'ArrowRight') nextIndex = tabIndex + 1;
+                if (event.key === 'ArrowLeft') nextIndex = tabIndex - 1;
+                if (event.key === 'Home') nextIndex = 0;
+                if (event.key === 'End') nextIndex = this.tabs.length - 1;
+                if (nextIndex === undefined) return;
+
+                event.preventDefault();
+                const nextTab = this.tabs[(nextIndex + this.tabs.length) % this.tabs.length];
+                this.activate(nextTab.dataset.msFeaturedTab, true);
+              },
+              { signal: this.abortController.signal }
+            );
           });
 
-          tab.addEventListener('keydown', (event) => {
-            let nextIndex;
-
-            if (event.key === 'ArrowRight') nextIndex = tabIndex + 1;
-            if (event.key === 'ArrowLeft') nextIndex = tabIndex - 1;
-            if (event.key === 'Home') nextIndex = 0;
-            if (event.key === 'End') nextIndex = this.tabs.length - 1;
-            if (nextIndex === undefined) return;
-
-            event.preventDefault();
-            const nextTab = this.tabs[(nextIndex + this.tabs.length) % this.tabs.length];
-            this.activate(nextTab.dataset.msFeaturedTab, true);
-          }, { signal: this.abortController.signal });
-        });
-
-        this.pageButtons.forEach((button) => {
-          button.addEventListener('click', () => this.showPage(Number(button.dataset.msFeaturedPage)), {
-            signal: this.abortController.signal
+          this.pageButtons.forEach((button) => {
+            button.addEventListener('click', () => this.showPage(Number(button.dataset.msFeaturedPage)), {
+              signal: this.abortController.signal,
+            });
           });
-        });
 
-        this.previousButton?.addEventListener('click', () => this.showPage(this.currentPage - 1), {
-          signal: this.abortController.signal
-        });
-        this.nextButton?.addEventListener('click', () => this.showPage(this.currentPage + 1), {
-          signal: this.abortController.signal
-        });
+          this.previousButton?.addEventListener('click', () => this.showPage(this.currentPage - 1), {
+            signal: this.abortController.signal,
+          });
+          this.nextButton?.addEventListener('click', () => this.showPage(this.currentPage + 1), {
+            signal: this.abortController.signal,
+          });
 
-        window.addEventListener('resize', () => this.showPage(0), {
-          signal: this.abortController.signal
-        });
+          window.addEventListener('resize', () => this.showPage(0), {
+            signal: this.abortController.signal,
+          });
 
-        document.addEventListener('shopify:block:select', (event) => {
-          const selectedTab = this.tabs.find((tab) => tab.dataset.blockId === event.detail.blockId);
-          if (selectedTab) this.activate(selectedTab.dataset.msFeaturedTab);
-        }, { signal: this.abortController.signal });
+          document.addEventListener(
+            'shopify:block:select',
+            (event) => {
+              const selectedTab = this.tabs.find((tab) => tab.dataset.blockId === event.detail.blockId);
+              if (selectedTab) this.activate(selectedTab.dataset.msFeaturedTab);
+            },
+            { signal: this.abortController.signal }
+          );
 
-        const selectedTab = this.tabs.find((tab) => tab.getAttribute('aria-selected') === 'true') || this.tabs[0];
-        if (selectedTab) {
-          this.activate(selectedTab.dataset.msFeaturedTab);
-        } else {
-          this.showPage(0);
+          const selectedTab = this.tabs.find((tab) => tab.getAttribute('aria-selected') === 'true') || this.tabs[0];
+          if (selectedTab) {
+            this.activate(selectedTab.dataset.msFeaturedTab);
+          } else {
+            this.showPage(0);
+          }
         }
-      }
 
-      disconnectedCallback() {
-        this.abortController?.abort();
-        this.abortController = null;
-      }
+        disconnectedCallback() {
+          this.abortController?.abort();
+          this.abortController = null;
+        }
 
-      activate(tabId, moveFocus = false) {
-        const activeTab = this.tabs.find((tab) => tab.dataset.msFeaturedTab === tabId);
-        if (!activeTab) return;
+        activate(tabId, moveFocus = false) {
+          const activeTab = this.tabs.find((tab) => tab.dataset.msFeaturedTab === tabId);
+          if (!activeTab) return;
 
-        this.tabs.forEach((tab) => {
-          const active = tab === activeTab;
-          tab.classList.toggle('is-active', active);
-          tab.setAttribute('aria-selected', String(active));
-          tab.tabIndex = active ? 0 : -1;
-        });
+          this.tabs.forEach((tab) => {
+            const active = tab === activeTab;
+            tab.classList.toggle('is-active', active);
+            tab.setAttribute('aria-selected', String(active));
+            tab.tabIndex = active ? 0 : -1;
+          });
 
-        this.panels.forEach((panel) => {
-          const active = panel.dataset.msFeaturedPanel === tabId;
-          panel.classList.toggle('is-active', active);
-          panel.hidden = !active;
-        });
+          this.panels.forEach((panel) => {
+            const active = panel.dataset.msFeaturedPanel === tabId;
+            panel.classList.toggle('is-active', active);
+            panel.hidden = !active;
+          });
 
-        this.showPage(0);
-        if (moveFocus) activeTab.focus({ preventScroll: true });
-      }
+          this.showPage(0);
+          if (moveFocus) activeTab.focus({ preventScroll: true });
+        }
 
-      showPage(pageIndex) {
-        const activePanel = this.panels.find((panel) => !panel.hidden);
-        if (!activePanel) return;
+        showPage(pageIndex) {
+          const activePanel = this.panels.find((panel) => !panel.hidden);
+          if (!activePanel) return;
 
-        const productCards = Array.from(activePanel.querySelectorAll('.ms-product-card'));
-        const productsPerPage = window.matchMedia('(max-width: 899px)').matches
-          ? 2
-          : window.matchMedia('(max-width: 1199px)').matches
+          const productCards = Array.from(activePanel.querySelectorAll('.ms-product-card'));
+          const productsPerPage = window.matchMedia('(max-width: 899px)').matches
+            ? 2
+            : window.matchMedia('(max-width: 1199px)').matches
             ? 3
             : 4;
-        const pageCount = Math.max(1, Math.min(Math.ceil(productCards.length / productsPerPage), this.pageButtons.length));
-        this.currentPage = (pageIndex + pageCount) % pageCount;
+          const pageCount = Math.max(
+            1,
+            Math.min(Math.ceil(productCards.length / productsPerPage), this.pageButtons.length)
+          );
+          this.currentPage = (pageIndex + pageCount) % pageCount;
 
-        const firstProduct = this.currentPage * productsPerPage;
-        const lastProduct = firstProduct + productsPerPage;
-        const showPreview = window.matchMedia('(max-width: 767px)').matches;
-        productCards.forEach((card, cardIndex) => {
-          // Keep a glimpse of the next card on mobile without adding an off-page
-          // tab stop. Dots and LTR swipes still advance two products at a time.
-          const preview = showPreview && cardIndex === lastProduct;
-          card.hidden = cardIndex < firstProduct || (cardIndex >= lastProduct && !preview);
-          card.inert = preview;
-          if (preview) card.setAttribute('aria-hidden', 'true');
-          else card.removeAttribute('aria-hidden');
-        });
+          const firstProduct = this.currentPage * productsPerPage;
+          const lastProduct = firstProduct + productsPerPage;
+          const showPreview = window.matchMedia('(max-width: 767px)').matches;
+          productCards.forEach((card, cardIndex) => {
+            // Keep a glimpse of the next card on mobile without adding an off-page
+            // tab stop. Dots and LTR swipes still advance two products at a time.
+            const preview = showPreview && cardIndex === lastProduct;
+            card.hidden = cardIndex < firstProduct || (cardIndex >= lastProduct && !preview);
+            card.inert = preview;
+            if (preview) card.setAttribute('aria-hidden', 'true');
+            else card.removeAttribute('aria-hidden');
+          });
 
-        this.pageButtons.forEach((button, buttonIndex) => {
-          const active = buttonIndex === this.currentPage;
-          button.hidden = buttonIndex >= pageCount;
-          button.classList.toggle('is-active', active);
-          button.setAttribute('aria-current', String(active));
-        });
+          this.pageButtons.forEach((button, buttonIndex) => {
+            const active = buttonIndex === this.currentPage;
+            button.hidden = buttonIndex >= pageCount;
+            button.classList.toggle('is-active', active);
+            button.setAttribute('aria-current', String(active));
+          });
 
-        const singlePage = pageCount < 2;
-        if (this.previousButton) this.previousButton.disabled = singlePage;
-        if (this.nextButton) this.nextButton.disabled = singlePage;
+          const singlePage = pageCount < 2;
+          if (this.previousButton) this.previousButton.disabled = singlePage;
+          if (this.nextButton) this.nextButton.disabled = singlePage;
+        }
       }
-    });
+    );
   }
 </script>
 {% stylesheet %}
-.ms-featured{display:block;height:770px;overflow:hidden;background:#fafafa}.ms-featured>.ms-home__container{height:100%;padding-top:40px;padding-bottom:40px}.ms-featured .ms-home__title{line-height:26px}.ms-featured__tabs-viewport{height:72px;margin-top:24px;overflow:hidden;border-radius:60px;background:#eff4f1}.ms-featured__tabs{display:flex;height:72px;align-items:center;justify-content:space-around;direction:ltr}.ms-featured__tab{display:flex;min-width:144px;height:56px;align-items:center;justify-content:center;gap:10px;padding:6px 18px;border:0;border-radius:50px;background:transparent;color:inherit;direction:rtl;cursor:pointer}.ms-featured__tab.is-active{background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.08)}.ms-featured__tab:focus-visible{outline:2px solid #1f423d;outline-offset:2px}.ms-featured__tab img{width:44px;height:44px;border-radius:50%;object-fit:cover}.ms-featured__tab b{font-size:14px;font-weight:700;white-space:nowrap}.ms-featured__products-viewport,.ms-featured__panel{height:511px}.ms-featured__products-viewport{margin-top:24px;overflow:hidden}.ms-featured__panel[hidden]{display:none}.ms-featured__products{display:flex;width:max-content;gap:16px;direction:ltr;transform:translate3d(var(--ms-featured-offset,0px),0,0);transition:transform .4s ease}.ms-featured__products>.ms-product-card{direction:rtl}.ms-featured__dots{display:flex;width:max-content;min-width:91px;height:9px;margin:24px auto 0;align-items:center;justify-content:center;gap:8px;direction:ltr}.ms-featured__dots button{display:block;padding:0;border:0;cursor:pointer}.ms-featured__arrow{width:7px;height:18px;background:transparent;color:#aaa;font-size:20px;line-height:9px}.ms-featured__arrow:disabled{opacity:.35;cursor:default}.ms-featured__dot{width:9px;height:9px;border-radius:50%;background:#ccc;transition:width .2s ease,background-color .2s ease}.ms-featured__dot.is-active{width:26px;border-radius:5px;background:#1f423d}.ms-featured__dot[hidden]{display:none}.ms-featured__dots button:focus-visible{outline:2px solid #1f423d;outline-offset:3px}@media(prefers-reduced-motion:reduce){.ms-featured__products,.ms-featured__dot{transition:none}}@media(max-width:767px){.ms-featured{height:409px}.ms-featured>.ms-home__container{padding:0}.ms-featured .ms-home__title{height:50px;padding:16px;line-height:26px}.ms-featured__tabs-viewport{width:100%;height:78px;margin:0;border-radius:0;background:#fff}.ms-featured__tabs{width:1020px;height:58px;margin-top:10px;justify-content:flex-start;gap:8.45px;transform:translateX(-102.56px)}.ms-featured__tab{min-width:137.51px;height:51.38px;padding:5.83px 10px;border:.73px solid #dbe4de}.ms-featured__tab img{width:38.26px;height:38.26px}.ms-featured__tab b{font-size:13.83px}.ms-featured__tab:nth-child(2) b{font-size:12px}.ms-featured__products-viewport{width:100%;height:270px;margin:0;padding:12px 16px 8px}.ms-featured__panel{height:250px}.ms-featured__products{height:250px;gap:3.66px;transform:translateX(-137px)}.ms-featured__dots{display:none}}
-.ms-featured__tabs,.ms-featured__products{margin-left:auto}.ms-featured__tabs,.ms-featured__products,.ms-featured__dots{direction:rtl}.ms-featured__products{transform:none}.ms-featured__products>.ms-product-card[hidden]{display:none}@media(max-width:767px){.ms-featured__tabs,.ms-featured__products{transform:none}}
+  .ms-featured {
+    display: block;
+    height: 770px;
+    overflow: hidden;
+    background: #fafafa;
+  }
+  .ms-featured > .ms-home__container {
+    height: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  .ms-featured .ms-home__title {
+    line-height: 26px;
+  }
+  .ms-featured__tabs-viewport {
+    height: 72px;
+    margin-top: 24px;
+    overflow: hidden;
+    border-radius: 60px;
+    background: #eff4f1;
+  }
+  .ms-featured__tabs {
+    display: flex;
+    height: 72px;
+    align-items: center;
+    justify-content: space-around;
+    direction: ltr;
+  }
+  .ms-featured__tab {
+    display: flex;
+    min-width: 144px;
+    height: 56px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 6px 18px;
+    border: 0;
+    border-radius: 50px;
+    background: transparent;
+    color: inherit;
+    direction: rtl;
+    cursor: pointer;
+  }
+  .ms-featured__tab.is-active {
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  }
+  .ms-featured__tab:focus-visible {
+    outline: 2px solid #1f423d;
+    outline-offset: 2px;
+  }
+  .ms-featured__tab img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .ms-featured__tab b {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .ms-featured__products-viewport,
+  .ms-featured__panel {
+    height: 511px;
+  }
+  .ms-featured__products-viewport {
+    margin-top: 24px;
+    overflow: hidden;
+  }
+  .ms-featured__panel[hidden] {
+    display: none;
+  }
+  .ms-featured__products {
+    display: flex;
+    width: max-content;
+    gap: 16px;
+    direction: ltr;
+    transform: translate3d(var(--ms-featured-offset, 0px), 0, 0);
+    transition: transform 0.4s ease;
+  }
+  .ms-featured__products > .ms-product-card {
+    direction: rtl;
+  }
+  .ms-featured__dots {
+    display: flex;
+    width: max-content;
+    min-width: 91px;
+    height: 9px;
+    margin: 24px auto 0;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    direction: ltr;
+  }
+  .ms-featured__dots button {
+    display: block;
+    padding: 0;
+    border: 0;
+    cursor: pointer;
+  }
+  .ms-featured__arrow {
+    width: 7px;
+    height: 18px;
+    background: transparent;
+    color: #aaa;
+    font-size: 20px;
+    line-height: 9px;
+  }
+  .ms-featured__arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .ms-featured__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #ccc;
+    transition: width 0.2s ease, background-color 0.2s ease;
+  }
+  .ms-featured__dot.is-active {
+    width: 26px;
+    border-radius: 5px;
+    background: #1f423d;
+  }
+  .ms-featured__dot[hidden] {
+    display: none;
+  }
+  .ms-featured__dots button:focus-visible {
+    outline: 2px solid #1f423d;
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ms-featured__products,
+    .ms-featured__dot {
+      transition: none;
+    }
+  }
+  @media (max-width: 767px) {
+    .ms-featured {
+      height: 409px;
+    }
+    .ms-featured > .ms-home__container {
+      padding: 0;
+    }
+    .ms-featured .ms-home__title {
+      height: 50px;
+      padding: 16px;
+      line-height: 26px;
+    }
+    .ms-featured__tabs-viewport {
+      width: 100%;
+      height: 78px;
+      margin: 0;
+      border-radius: 0;
+      background: #fff;
+    }
+    .ms-featured__tabs {
+      width: 1020px;
+      height: 58px;
+      margin-top: 10px;
+      justify-content: flex-start;
+      gap: 8.45px;
+      transform: translateX(-102.56px);
+    }
+    .ms-featured__tab {
+      min-width: 137.51px;
+      height: 51.38px;
+      padding: 5.83px 10px;
+      border: 0.73px solid #dbe4de;
+    }
+    .ms-featured__tab img {
+      width: 38.26px;
+      height: 38.26px;
+    }
+    .ms-featured__tab b {
+      font-size: 13.83px;
+    }
+    .ms-featured__tab:nth-child(2) b {
+      font-size: 12px;
+    }
+    .ms-featured__products-viewport {
+      width: 100%;
+      height: 270px;
+      margin: 0;
+      padding: 12px 16px 8px;
+    }
+    .ms-featured__panel {
+      height: 250px;
+    }
+    .ms-featured__products {
+      height: 250px;
+      gap: 3.66px;
+      transform: translateX(-137px);
+    }
+    .ms-featured__dots {
+      display: none;
+    }
+  }
+  .ms-featured__tabs,
+  .ms-featured__products {
+    margin-left: auto;
+  }
+  .ms-featured__tabs,
+  .ms-featured__products,
+  .ms-featured__dots {
+    direction: rtl;
+  }
+  .ms-featured__products {
+    transform: none;
+  }
+  .ms-featured__products > .ms-product-card[hidden] {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .ms-featured__tabs,
+    .ms-featured__products {
+      transform: none;
+    }
+  }
 {% endstylesheet %}
 {% schema %}
-{"name":"MS — Featured products","max_blocks":6,"settings":[{"type":"text","id":"heading","label":"Heading","default":"منتجات مميزة"},{"type":"collection","id":"collection","label":"Fallback products collection","info":"Used only when a tab does not have its own collection selected."},{"type":"text","id":"badge","label":"Product badge","default":"جديد"},{"type":"text","id":"button_label","label":"Add button","default":"أضف إلى السلة"}],"blocks":[{"type":"tab","name":"Collection tab","settings":[{"type":"collection","id":"collection","label":"Products collection"},{"type":"image_picker","id":"image","label":"Custom image"},{"type":"text","id":"title","label":"Tab title"},{"type":"checkbox","id":"active","label":"Initially selected","default":false}]}],"presets":[{"name":"MS — Featured products","blocks":[{"type":"tab","settings":{"title":"مفرزنات"}},{"type":"tab","settings":{"title":"بوكس تقديم"}},{"type":"tab","settings":{"title":"الجدور"}},{"type":"tab","settings":{"title":"الفتة"}},{"type":"tab","settings":{"title":"أطباق","active":true}}]}]}
+{
+  "name": "MS — Featured products",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "منتجات مميزة" },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Fallback products collection",
+      "info": "Used only when a tab does not have its own collection selected."
+    },
+    { "type": "text", "id": "badge", "label": "Product badge", "default": "جديد" },
+    { "type": "text", "id": "button_label", "label": "Add button", "default": "أضف إلى السلة" }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Collection tab",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Products collection" },
+        { "type": "image_picker", "id": "image", "label": "Custom image" },
+        { "type": "text", "id": "title", "label": "Tab title" },
+        { "type": "checkbox", "id": "active", "label": "Initially selected", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "MS — Featured products",
+      "blocks": [
+        { "type": "tab", "settings": { "title": "مفرزنات" } },
+        { "type": "tab", "settings": { "title": "بوكس تقديم" } },
+        { "type": "tab", "settings": { "title": "الجدور" } },
+        { "type": "tab", "settings": { "title": "الفتة" } },
+        { "type": "tab", "settings": { "title": "أطباق", "active": true } }
+      ]
+    }
+  ]
+}
 {% endschema %}

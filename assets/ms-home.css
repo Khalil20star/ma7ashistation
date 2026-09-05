@@ -745,11 +745,7 @@
   }
 
   .hdt-page-type-index .ms-featured__dots {
-    position: relative;
-    display: flex;
-    height: auto;
-    min-height: 9px;
-    margin-top: 2px;
+    display: none;
   }
 
   .hdt-page-type-index .ms-featured__arrow {

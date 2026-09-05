@@ -9,7 +9,7 @@
       </div>
     </div>
     <ms-reviews-carousel class="ms-reviews__slider">
-      <button class="ms-reviews__arrow" type="button" data-ms-reviews-previous aria-label="السابق">›</button>
+      <button class="ms-reviews__arrow" type="button" data-ms-reviews-previous aria-label="السابق">‹</button>
       <div class="ms-reviews__viewport" aria-live="polite">
         {%- for block in section.blocks -%}
           <blockquote
@@ -26,7 +26,7 @@
           </blockquote>
         {%- endfor -%}
       </div>
-      <button class="ms-reviews__arrow" type="button" data-ms-reviews-next aria-label="التالي">‹</button>
+      <button class="ms-reviews__arrow" type="button" data-ms-reviews-next aria-label="التالي">›</button>
       <div class="ms-reviews__dots" role="group" aria-label="Customer reviews">
         {%- for block in section.blocks -%}
           <button
