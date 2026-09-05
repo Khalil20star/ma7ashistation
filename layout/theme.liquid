@@ -41,12 +41,13 @@
       endif
     -%}
     {{ 'ms-global-font.css' | asset_url | stylesheet_tag }}
+    {{ 'ms-home.css' | asset_url | stylesheet_tag }}
+    {{ 'ms-shared-components.css' | asset_url | stylesheet_tag }}
     {%- unless request.page_type == 'index' -%}
       {%- render 'ms-storefront-colors' -%}
       {{ 'ms-storefront.css' | asset_url | stylesheet_tag }}
     {%- endunless -%}
     {%- if request.page_type == 'index' -%}
-      {{ 'ms-home.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'ms-home.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
@@ -54,7 +55,7 @@
     {%- endunless -%}
   </head>
 
-  <body class="hdt-page-type-{{ request.page_type }}">
+  <body class="ms-storefront hdt-page-type-{{ request.page_type }}">
     {% comment %} {%- section 'product-card-configs' -%} {% endcomment %}
     {%- unless template == 'product.only_config' and request.design_mode == false -%}
     {%- if request.page_type == "index" or request.page_type == "policy" -%}
@@ -62,9 +63,7 @@
     {%- endif -%}
     {%- render 's-dom-temp' -%}
     <a class="skip-to-content-link button sr-only " href="#MainContent">{{ 'accessibility.skip_to_text' | t }}</a>
-    {%- unless request.page_type == 'index' -%}
-      {%- sections 'header-group' -%}
-    {%- endunless -%}
+    {%- sections 'ms-header-group' -%}
     {%- endunless -%}
 
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
@@ -75,11 +74,7 @@
     </main>
 
     {%- unless template == 'product.only_config' and request.design_mode == false -%}
-    {%- unless request.page_type == 'index' -%}
-      <footer>
-        {%- sections 'footer-group' -%}
-      </footer>
-    {%- endunless -%}
+    {%- sections 'ms-footer-group' -%}
     {%- liquid
       sections 'system-group'
       if settings.enable_compare_popup

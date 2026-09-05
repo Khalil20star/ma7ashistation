@@ -10,29 +10,29 @@
  * These rules keep those proportions while allowing every section to grow with
  * its content and every grid/rail to adapt between the desktop and mobile frames.
  */
-.hdt-page-type-index .ms-home {
+.ms-storefront .ms-home {
   max-width: 100%;
   --ms-action: #1b4d2e;
   --ms-sale: #d63b2f;
 }
 
 /* Figma surface and component colors; shared by both responsive layouts. */
-.hdt-page-type-index .ms-product-card__form button,
-.hdt-page-type-index .ms-product-card__button,
+.ms-storefront .ms-product-card__form button,
+.ms-storefront .ms-product-card__button,
 .hdt-page-type-index .ms-offers__form button {
   background: var(--ms-action);
 }
 
-.hdt-page-type-index .ms-product-card__form button,
-.hdt-page-type-index .ms-product-card__button {
+.ms-storefront .ms-product-card__form button,
+.ms-storefront .ms-product-card__button {
   border-radius: 9px;
 }
 
-.hdt-page-type-index .ms-product-card__badge {
+.ms-storefront .ms-product-card__badge {
   background: var(--ms-sale);
 }
 
-.hdt-page-type-index .ms-product-card__prices s {
+.ms-storefront .ms-product-card__prices s {
   color: #7f7f7f;
 }
 
@@ -48,19 +48,19 @@
   width: min(100%, 1440px);
 }
 
-.hdt-page-type-index .ms-product-card {
+.ms-storefront .ms-product-card {
   display: flex;
   height: auto;
   min-height: 511px;
   flex-direction: column;
 }
 
-.hdt-page-type-index .ms-product-card__media {
+.ms-storefront .ms-product-card__media {
   height: auto;
   aspect-ratio: 328 / 350;
 }
 
-.hdt-page-type-index .ms-product-card__body {
+.ms-storefront .ms-product-card__body {
   width: 100%;
   height: auto;
   min-height: 155px;
@@ -68,20 +68,20 @@
 }
 
 /* Announcement and header */
-.hdt-page-type-index .ms-home.ms-announcement,
-.hdt-page-type-index .ms-announcement__inner,
-.hdt-page-type-index .ms-home.ms-header,
-.hdt-page-type-index .ms-header__bar {
+.ms-storefront .ms-home.ms-announcement,
+.ms-storefront .ms-announcement__inner,
+.ms-storefront .ms-home.ms-header,
+.ms-storefront .ms-header__bar {
   height: auto;
 }
 
-.hdt-page-type-index .ms-announcement__inner {
+.ms-storefront .ms-announcement__inner {
   min-height: 41px;
   white-space: normal;
   text-align: center;
 }
 
-.hdt-page-type-index .ms-header__bar {
+.ms-storefront .ms-header__bar {
   min-height: 68px;
   grid-template-columns: minmax(80px, 104px) minmax(220px, 740px) 22px;
   gap: clamp(18px, 4vw, 64px);
@@ -437,44 +437,44 @@
 }
 
 /* Footer */
-.hdt-page-type-index .ms-home.ms-footer,
-.hdt-page-type-index .ms-footer__top,
-.hdt-page-type-index .ms-footer__brand,
-.hdt-page-type-index .ms-footer__menus,
-.hdt-page-type-index .ms-footer__bottom {
+.ms-storefront .ms-home.ms-footer,
+.ms-storefront .ms-footer__top,
+.ms-storefront .ms-footer__brand,
+.ms-storefront .ms-footer__menus,
+.ms-storefront .ms-footer__bottom {
   height: auto;
 }
 
-.hdt-page-type-index .ms-footer {
+.ms-storefront .ms-footer {
   overflow: visible;
   padding-inline: clamp(40px, 6.67vw, 96px);
 }
 
-.hdt-page-type-index .ms-footer__top {
+.ms-storefront .ms-footer__top {
   min-height: 299px;
   grid-template-columns: minmax(70px, 88px) minmax(70px, 83px) 70px minmax(260px, 480px);
   column-gap: clamp(24px, 10vw, 144px);
 }
 
-.hdt-page-type-index .ms-footer h2 {
+.ms-storefront .ms-footer h2 {
   color: #fff;
 }
 
-.hdt-page-type-index .ms-footer__brand {
+.ms-storefront .ms-footer__brand {
   align-items: flex-start;
 }
 
 /* This extra theme toolbar is not part of the homepage design. */
-.hdt-page-type-index .hdt-section-toolbar-mobile {
+.ms-storefront .hdt-section-toolbar-mobile {
   display: none;
 }
 
-.hdt-page-type-index .ms-footer__brand,
-.hdt-page-type-index .ms-footer__brand p {
+.ms-storefront .ms-footer__brand,
+.ms-storefront .ms-footer__brand p {
   width: min(100%, 480px);
 }
 
-.hdt-page-type-index .ms-footer__bottom {
+.ms-storefront .ms-footer__bottom {
   min-height: 51px;
   margin-inline: calc(clamp(40px, 6.67vw, 96px) * -1);
 }
@@ -501,16 +501,16 @@
     padding-inline: 24px;
   }
 
-  .hdt-page-type-index .ms-footer {
+  .ms-storefront .ms-footer {
     padding-inline: 40px;
   }
 
-  .hdt-page-type-index .ms-footer__top {
+  .ms-storefront .ms-footer__top {
     grid-template-columns: repeat(3, minmax(70px, 1fr)) minmax(260px, 1.8fr);
     column-gap: 24px;
   }
 
-  .hdt-page-type-index .ms-footer__bottom {
+  .ms-storefront .ms-footer__bottom {
     margin-inline: -40px;
   }
 }
@@ -543,24 +543,24 @@
     width: 100%;
   }
 
-  .hdt-page-type-index .ms-footer__top {
+  .ms-storefront .ms-footer__top {
     display: flex;
     min-height: 0;
     flex-direction: column;
     gap: 32px;
   }
 
-  .hdt-page-type-index .ms-footer__brand {
+  .ms-storefront .ms-footer__brand {
     align-items: center;
     align-self: center;
     text-align: center;
   }
 
-  .hdt-page-type-index .ms-footer__brand p {
+  .ms-storefront .ms-footer__brand p {
     text-align: center;
   }
 
-  .hdt-page-type-index .ms-footer__menus {
+  .ms-storefront .ms-footer__menus {
     display: grid;
     width: 100%;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -572,15 +572,15 @@
     width: 100%;
   }
 
-  .hdt-page-type-index .ms-product-card {
+  .ms-storefront .ms-product-card {
     --ms-mobile-card-width: max(150px, 42.016vw);
     width: var(--ms-mobile-card-width);
     min-height: 250px;
     flex: 0 0 var(--ms-mobile-card-width);
   }
 
-  .hdt-page-type-index .ms-product-card__form button,
-  .hdt-page-type-index .ms-product-card__button {
+  .ms-storefront .ms-product-card__form button,
+  .ms-storefront .ms-product-card__button {
     border-radius: 3px;
   }
 
@@ -588,13 +588,13 @@
     background: var(--ms-action);
   }
 
-  .hdt-page-type-index .ms-product-card__media {
+  .ms-storefront .ms-product-card__media {
     width: 100%;
     height: auto;
     aspect-ratio: 1;
   }
 
-  .hdt-page-type-index .ms-product-card__body {
+  .ms-storefront .ms-product-card__body {
     width: 100%;
     height: auto;
     min-height: 90px;
@@ -603,18 +603,18 @@
 
   /* The Figma text box is shorter than its Arabic glyphs. Keep the compact
    * card proportions without clipping the tops and descenders of the title. */
-  .hdt-page-type-index .ms-product-card__title {
+  .ms-storefront .ms-product-card__title {
     height: auto;
     flex-basis: auto;
     line-height: 16px;
   }
 
-  .hdt-page-type-index .ms-home.ms-announcement,
-  .hdt-page-type-index .ms-announcement__inner {
+  .ms-storefront .ms-home.ms-announcement,
+  .ms-storefront .ms-announcement__inner {
     height: auto;
   }
 
-  .hdt-page-type-index .ms-announcement__inner {
+  .ms-storefront .ms-announcement__inner {
     left: auto;
     width: 100%;
     min-height: 36px;
@@ -623,12 +623,12 @@
     transform: none;
   }
 
-  .hdt-page-type-index .ms-home.ms-header,
-  .hdt-page-type-index .ms-header__bar {
+  .ms-storefront .ms-home.ms-header,
+  .ms-storefront .ms-header__bar {
     height: auto;
   }
 
-  .hdt-page-type-index .ms-header__bar {
+  .ms-storefront .ms-header__bar {
     min-height: 116px;
     grid-template-columns: 22px minmax(0, 1fr) 22px;
     grid-template-rows: minmax(58px, auto) minmax(57px, auto);
@@ -911,19 +911,19 @@
     min-height: 63px;
   }
 
-  .hdt-page-type-index .ms-footer {
+  .ms-storefront .ms-footer {
     height: auto;
     padding: 16px 16px 0;
   }
 
-  .hdt-page-type-index .ms-footer__top {
+  .ms-storefront .ms-footer__top {
     width: 100%;
     height: auto;
     min-height: 0;
     gap: 36px;
   }
 
-  .hdt-page-type-index .ms-footer__brand {
+  .ms-storefront .ms-footer__brand {
     width: 100%;
     height: auto;
     flex: none;
@@ -931,23 +931,23 @@
     align-items: center;
   }
 
-  .hdt-page-type-index .ms-footer__brand p {
+  .ms-storefront .ms-footer__brand p {
     width: 100%;
   }
 
-  .hdt-page-type-index .ms-footer__menus {
+  .ms-storefront .ms-footer__menus {
     width: 100%;
     height: auto;
     gap: 16px;
     padding-bottom: 18px;
   }
 
-  .hdt-page-type-index .ms-footer__menus > div:nth-child(1),
-  .hdt-page-type-index .ms-footer__categories-nav {
+  .ms-storefront .ms-footer__menus > div:nth-child(1),
+  .ms-storefront .ms-footer__categories-nav {
     width: min(100%, 292px);
   }
 
-  .hdt-page-type-index .ms-footer__bottom {
+  .ms-storefront .ms-footer__bottom {
     height: auto;
     min-height: 51px;
     margin-inline: -8px;
@@ -964,7 +964,7 @@
     font-size: 20px;
   }
 
-  .hdt-page-type-index .ms-header__bar {
+  .ms-storefront .ms-header__bar {
     padding-inline: 12px;
   }
 

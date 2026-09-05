@@ -1,3 +1,6 @@
+{%- if request.page_type != 'index' -%}
+  {%- render 'ms-theme-product-card', card_product: card_product, section_id: section_id, class: class, product_url: product_url, sizes: sizes -%}
+{%- else -%}
 {%- comment -%}
   Renders a product card
 
@@ -134,3 +137,4 @@
       </div>
     </div>
   </hdt-card-product>
+{%- endif -%}

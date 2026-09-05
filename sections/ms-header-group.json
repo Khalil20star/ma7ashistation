@@ -1,0 +1,27 @@
+{
+  "name": "MS — Header",
+  "type": "header",
+  "sections": {
+    "ms_announcement": {
+      "type": "ms-announcement",
+      "settings": {
+        "accessibility_label": "إعلان",
+        "code": "NOW30",
+        "text": "خصم 10% على اي طلب عن طريق الموقع — استخدم الكوبون عند الطلب",
+        "badge": "عرض محدود"
+      }
+    },
+    "ms_header": {
+      "type": "ms-header",
+      "settings": {
+        "menu": "",
+        "menu_label": "القائمة",
+        "search_placeholder": "البحث"
+      }
+    }
+  },
+  "order": [
+    "ms_announcement",
+    "ms_header"
+  ]
+}

@@ -2,16 +2,19 @@
   assign card_product = product
   assign card_variant = card_product.selected_or_first_available_variant
   assign card_image = card_product.featured_media.preview_image | default: card_product.featured_image
+  assign card_url = product_url | default: card_product.url | default: routes.all_products_collection_url
+  assign card_sizes = sizes | default: '(max-width: 767px) 160px, 328px'
   assign card_badge = badge | default: '⚡ الأكثر مبيعا'
   assign sale_badge = false
   if card_badge contains '⚡'
     assign sale_badge = true
   endif
 -%}
+{%- capture card_form_id -%}ms-card-{{ section.id }}-{{ card_context | handleize }}-{{ card_product.id }}{%- endcapture -%}
 <article class="ms-product-card">
-  <a class="ms-product-card__media" href="{{ card_product.url | default: routes.all_products_collection_url }}">
+  <a class="ms-product-card__media" href="{{ card_url }}">
     {%- if card_image != blank -%}
-      {{ card_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '180, 320, 480, 640, 800', sizes: '(max-width: 767px) 160px, 328px', class: 'ms-product-card__image', alt: card_image.alt | default: card_product.title }}
+      {{ card_image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '180, 320, 480, 640, 800', sizes: card_sizes, class: 'ms-product-card__image', alt: card_image.alt | default: card_product.title }}
     {%- else -%}
       {{ 'product-1' | placeholder_svg_tag: 'ms-product-card__image ms-product-card__placeholder' }}
     {%- endif -%}
@@ -19,18 +22,22 @@
   </a>
   <div class="ms-product-card__body">
     <div class="ms-product-card__rating" aria-label="5 من 5 نجوم"><span>(7)</span><b>★★★★★</b></div>
-    <a class="ms-product-card__title" href="{{ card_product.url | default: routes.all_products_collection_url }}">{{ card_product.title | default: 'جدر محاشي من اختيارك' }}</a>
+    <a class="ms-product-card__title" href="{{ card_url }}">{{ card_product.title | default: 'جدر محاشي من اختيارك' | escape }}</a>
     <div class="ms-product-card__prices">
       {%- if card_variant.compare_at_price > card_variant.price -%}<s>{{ card_variant.compare_at_price | money_without_trailing_zeros }}</s>{%- endif -%}
       <strong>{% if card_variant %}{{ card_variant.price | money_without_trailing_zeros }}{% else %}4.75KD{% endif %}</strong>
     </div>
     {%- if card_product != blank -%}
+      {%- if choose_options and card_product.has_only_default_variant == false and card_product.available -%}
+        <a class="ms-product-card__button" href="{{ card_url }}">{{ 'products.product.choose_options' | t }}</a>
+      {%- else -%}
       <wrapp-hdt-pr-frm class="hdt-contents">
-        {%- form 'product', card_product, class: 'ms-product-card__form' -%}
+        {%- form 'product', card_product, id: card_form_id, class: 'ms-product-card__form' -%}
           <input type="hidden" name="id" value="{{ card_variant.id }}">
-          <button type="submit" name="add" {% unless card_variant.available %}disabled{% endunless %}>{{ button_label | default: 'أضف إلى السلة' }}</button>
+          <button type="submit" name="add" {% unless card_variant.available %}disabled{% endunless %}>{% if card_variant.available %}{{ button_label | default: 'أضف إلى السلة' }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</button>
         {%- endform -%}
       </wrapp-hdt-pr-frm>
+      {%- endif -%}
     {%- else -%}
       <a class="ms-product-card__button" href="{{ routes.all_products_collection_url }}">{{ button_label | default: 'أضف إلى السلة' }}</a>
     {%- endif -%}

@@ -1,0 +1,27 @@
+{
+  "name": "MS — Footer",
+  "type": "footer",
+  "sections": {
+    "ms_footer": {
+      "type": "ms-footer",
+      "settings": {
+        "description": "محاشي طازجة بنكهات غنية، تغليف مرتب،\nوتوصيل سريع يخلي طلبك يوصل ساخن ولذيذ.",
+        "social_label": "تابعنا",
+        "facebook": "/",
+        "twitter": "/",
+        "instagram": "/",
+        "tiktok": "/",
+        "categories_heading": "الأقسام",
+        "categories_menu": "",
+        "quick_heading": "روابط سريعة",
+        "quick_menu": "",
+        "policy_heading": "سياسات",
+        "policy_menu": "",
+        "copyright": "محاشي ستيشن — جميع الحقوق محفوظة © 2026"
+      }
+    }
+  },
+  "order": [
+    "ms_footer"
+  ]
+}

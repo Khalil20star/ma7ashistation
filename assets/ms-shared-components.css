@@ -1,0 +1,58 @@
+/* Shared homepage components, fitted to the host grid/slider without changing
+ * collection filtering, pagination, or the product detail form. */
+.ms-storefront .ms-theme-card {
+  min-width: 0;
+  color: #1a1a1a;
+  text-align: right;
+}
+
+.ms-storefront .ms-theme-card > .ms-product-card {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex-basis: auto;
+}
+
+.ms-storefront .ms-theme-card .ms-product-card__body {
+  gap: 14px;
+}
+
+.ms-storefront .ms-theme-card .ms-product-card__form,
+.ms-storefront .ms-theme-card .ms-product-card__button {
+  margin-top: auto;
+}
+
+.ms-storefront .ms-theme-card .ms-product-card__button {
+  color: #fff;
+}
+
+.ms-storefront .ms-theme-card .ms-product-card__title {
+  color: #1a1a1a;
+}
+
+.ms-storefront .ms-theme-card .ms-product-card__media {
+  flex-shrink: 0;
+}
+
+.ms-storefront .ms-theme-card .ms-product-card__form button:hover:not(:disabled),
+.ms-storefront .ms-theme-card .ms-product-card__button:hover {
+  background: #143c24;
+}
+
+.ms-storefront .ms-theme-card :is(a, button):focus-visible {
+  outline: 2px solid #1b4d2e;
+  outline-offset: -3px;
+}
+
+/* A one-column/list view still uses the shared card, without an oversized image. */
+.ms-storefront .ms-theme-card.hdt-pr-list > .ms-product-card {
+  max-width: 440px;
+  margin-inline: auto;
+}
+
+@media (max-width: 767px) {
+  .ms-storefront .ms-theme-card .ms-product-card__body {
+    gap: 7px;
+  }
+}
