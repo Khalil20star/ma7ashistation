@@ -17,7 +17,7 @@
               -%}
               <a class="ms-categories__pill{% if block.settings.active %} is-active{% endif %}{% if block.settings.compact_label %} is-compact{% endif %}" href="{{ pill_collection.url | default: routes.all_products_collection_url }}" data-ms-category-item data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
                 {%- if pill_image != blank -%}{{ pill_image | image_url: width: 100 | image_tag: loading: 'lazy', width: 39, height: 39, alt: pill_title }}{%- endif -%}
-                <b>{{ pill_title }}</b><span aria-hidden="true">&gt;</span>
+                <b>{{ pill_title }}</b>
               </a>
             {%- endfor -%}
           </div>
