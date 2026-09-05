@@ -8,20 +8,125 @@
         <p>{{ section.settings.summary }}</p>
       </div>
     </div>
-    <div class="ms-reviews__slider">
-      <button class="ms-reviews__arrow" type="button" aria-label="السابق">›</button>
-      {%- assign first_review = section.blocks.first -%}
-      <blockquote>
-        <div>★★★★★</div>
-        <p>{{ first_review.settings.text }}</p>
-        <cite>{{ first_review.settings.author }}</cite>
-        <small>{{ first_review.settings.location }}</small>
-      </blockquote>
-      <button class="ms-reviews__arrow" type="button" aria-label="التالي">‹</button>
-      <div class="ms-reviews__dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-    </div>
+    <ms-reviews-carousel class="ms-reviews__slider">
+      <button class="ms-reviews__arrow" type="button" data-ms-reviews-previous aria-label="السابق">›</button>
+      <div class="ms-reviews__viewport" aria-live="polite">
+        {%- for block in section.blocks -%}
+          <blockquote
+            data-ms-review-slide
+            data-block-id="{{ block.id }}"
+            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+            {% unless forloop.first %}hidden{% endunless %}
+            {{ block.shopify_attributes }}
+          >
+            <div>★★★★★</div>
+            <p>{{ block.settings.text }}</p>
+            <cite>{{ block.settings.author }}</cite>
+            <small>{{ block.settings.location }}</small>
+          </blockquote>
+        {%- endfor -%}
+      </div>
+      <button class="ms-reviews__arrow" type="button" data-ms-reviews-next aria-label="التالي">‹</button>
+      <div class="ms-reviews__dots" role="group" aria-label="Customer reviews">
+        {%- for block in section.blocks -%}
+          <button
+            type="button"
+            data-ms-review-dot="{{ forloop.index0 }}"
+            aria-label="Review {{ forloop.index }}"
+            aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+          ></button>
+        {%- endfor -%}
+      </div>
+    </ms-reviews-carousel>
   </div>
 </section>
+
+<script>
+  if (!customElements.get('ms-reviews-carousel')) {
+    customElements.define('ms-reviews-carousel', class extends HTMLElement {
+      connectedCallback() {
+        if (this.abortController) return;
+
+        this.abortController = new AbortController();
+        this.viewport = this.querySelector('.ms-reviews__viewport');
+        this.slides = Array.from(this.querySelectorAll('[data-ms-review-slide]'));
+        this.dots = Array.from(this.querySelectorAll('[data-ms-review-dot]'));
+        this.previousButton = this.querySelector('[data-ms-reviews-previous]');
+        this.nextButton = this.querySelector('[data-ms-reviews-next]');
+        this.currentIndex = 0;
+        this.pointerStartX = null;
+        this.pointerStartY = null;
+
+        this.previousButton?.addEventListener('click', () => this.showSlide(this.currentIndex - 1), {
+          signal: this.abortController.signal
+        });
+        this.nextButton?.addEventListener('click', () => this.showSlide(this.currentIndex + 1), {
+          signal: this.abortController.signal
+        });
+
+        this.dots.forEach((dot) => {
+          dot.addEventListener('click', () => this.showSlide(Number(dot.dataset.msReviewDot)), {
+            signal: this.abortController.signal
+          });
+        });
+
+        this.viewport?.addEventListener('pointerdown', (event) => {
+          if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+          this.pointerStartX = event.clientX;
+          this.pointerStartY = event.clientY;
+          this.viewport.setPointerCapture?.(event.pointerId);
+        }, { signal: this.abortController.signal });
+
+        this.viewport?.addEventListener('pointerup', (event) => {
+          if (this.pointerStartX === null) return;
+          const distanceX = event.clientX - this.pointerStartX;
+          const distanceY = event.clientY - this.pointerStartY;
+          if (this.viewport.hasPointerCapture?.(event.pointerId)) this.viewport.releasePointerCapture(event.pointerId);
+          this.pointerStartX = null;
+          this.pointerStartY = null;
+          if (Math.abs(distanceX) < 42 || Math.abs(distanceY) >= Math.abs(distanceX)) return;
+          this.showSlide(this.currentIndex + (distanceX > 0 ? 1 : -1));
+        }, { signal: this.abortController.signal });
+
+        this.viewport?.addEventListener('pointercancel', () => {
+          this.pointerStartX = null;
+          this.pointerStartY = null;
+        }, { signal: this.abortController.signal });
+
+        document.addEventListener('shopify:block:select', (event) => {
+          const selectedSlide = this.slides.find((slide) => slide.dataset.blockId === event.detail.blockId);
+          if (selectedSlide) this.showSlide(this.slides.indexOf(selectedSlide));
+        }, { signal: this.abortController.signal });
+
+        this.showSlide(0);
+      }
+
+      disconnectedCallback() {
+        this.abortController?.abort();
+        this.abortController = null;
+      }
+
+      showSlide(index) {
+        if (this.slides.length < 1) return;
+        this.currentIndex = (index + this.slides.length) % this.slides.length;
+
+        this.slides.forEach((slide, slideIndex) => {
+          const active = slideIndex === this.currentIndex;
+          slide.hidden = !active;
+          slide.setAttribute('aria-hidden', String(!active));
+        });
+
+        this.dots.forEach((dot, dotIndex) => {
+          dot.setAttribute('aria-current', String(dotIndex === this.currentIndex));
+        });
+
+        const singleSlide = this.slides.length < 2;
+        if (this.previousButton) this.previousButton.disabled = singleSlide;
+        if (this.nextButton) this.nextButton.disabled = singleSlide;
+      }
+    });
+  }
+</script>
 {% stylesheet %}
   .ms-reviews {
     height: 316px;
@@ -149,16 +254,32 @@
     gap: 7px;
     transform: translateX(-50%);
   }
-  .ms-reviews__dots i {
+  .ms-reviews__dots button {
     width: 8px;
     height: 8px;
+    padding: 0;
+    border: 0;
     border-radius: 50%;
     background: #c4d1cf;
+    cursor: pointer;
   }
-  .ms-reviews__dots i:first-child {
+  .ms-reviews__dots button[aria-current="true"] {
     width: 22px;
     border-radius: 4px;
     background: #1f5348;
+  }
+  .ms-reviews__viewport {
+    width: 772px;
+    min-width: 0;
+    overflow: hidden;
+    touch-action: pan-y pinch-zoom;
+  }
+  .ms-reviews__viewport blockquote[hidden] {
+    display: none;
+  }
+  .ms-reviews__arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
   }
   @media (max-width: 767px) {
     .ms-reviews {
@@ -199,6 +320,9 @@
       height: 251px;
       flex: 0 0 251px;
       padding: 0 0 26px;
+    }
+    .ms-reviews__viewport {
+      width: 100%;
     }
     .ms-reviews__slider blockquote {
       width: 343px;

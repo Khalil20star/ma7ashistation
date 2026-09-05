@@ -810,3 +810,36 @@
     padding-inline: 16px;
   }
 }
+
+/* Mobile/touch carousel gestures */
+.hdt-page-type-index .ms-hero,
+.hdt-page-type-index .ms-categories__viewport,
+.hdt-page-type-index .ms-best__viewport,
+.hdt-page-type-index .ms-featured__tabs-viewport,
+.hdt-page-type-index .ms-featured__products-viewport,
+.hdt-page-type-index .ms-offers__tabs,
+.hdt-page-type-index .ms-offers__viewport,
+.hdt-page-type-index .ms-reviews__viewport,
+.hdt-page-type-index .ms-videos__viewport {
+  touch-action: pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hdt-page-type-index .ms-hero__image,
+.hdt-page-type-index .ms-categories__rail,
+.hdt-page-type-index .ms-best__grid,
+.hdt-page-type-index .ms-featured__tabs,
+.hdt-page-type-index .ms-featured__products,
+.hdt-page-type-index .ms-offers__grid,
+.hdt-page-type-index .ms-reviews__slider blockquote,
+.hdt-page-type-index .ms-videos__track {
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.hdt-page-type-index .is-touch-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+}

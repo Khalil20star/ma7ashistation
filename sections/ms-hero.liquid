@@ -108,6 +108,9 @@
         this.dots = Array.from(this.querySelectorAll('[data-ms-hero-dot]'));
         this.currentIndex = 0;
         this.pointerStartX = null;
+        this.pointerStartY = null;
+        this.pointerId = null;
+        this.suppressClickUntil = 0;
         this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         this.dots.forEach((dot) => {
@@ -130,21 +133,38 @@
         }, { signal: this.abortController.signal });
 
         this.addEventListener('pointerdown', (event) => {
+          if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
           this.pointerStartX = event.clientX;
+          this.pointerStartY = event.clientY;
+          this.pointerId = event.pointerId;
+          this.setPointerCapture?.(event.pointerId);
         }, { signal: this.abortController.signal });
 
         this.addEventListener('pointerup', (event) => {
           if (this.pointerStartX === null) return;
-          const distance = event.clientX - this.pointerStartX;
+          const distanceX = event.clientX - this.pointerStartX;
+          const distanceY = event.clientY - this.pointerStartY;
+          if (this.hasPointerCapture?.(event.pointerId)) this.releasePointerCapture(event.pointerId);
           this.pointerStartX = null;
-          if (Math.abs(distance) < 45) return;
-          this.showSlide(this.currentIndex + (distance > 0 ? 1 : -1));
+          this.pointerStartY = null;
+          this.pointerId = null;
+          if (Math.abs(distanceX) < 45 || Math.abs(distanceY) >= Math.abs(distanceX)) return;
+          this.suppressClickUntil = performance.now() + 350;
+          this.showSlide(this.currentIndex + (distanceX > 0 ? 1 : -1));
           this.restartAutoplay();
         }, { signal: this.abortController.signal });
 
         this.addEventListener('pointercancel', () => {
           this.pointerStartX = null;
+          this.pointerStartY = null;
+          this.pointerId = null;
         }, { signal: this.abortController.signal });
+
+        this.addEventListener('click', (event) => {
+          if (performance.now() >= this.suppressClickUntil) return;
+          event.preventDefault();
+          event.stopPropagation();
+        }, { capture: true, signal: this.abortController.signal });
 
         this.addEventListener('mouseenter', () => this.stopAutoplay(), { signal: this.abortController.signal });
         this.addEventListener('mouseleave', () => this.startAutoplay(), { signal: this.abortController.signal });
