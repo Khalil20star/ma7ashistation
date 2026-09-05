@@ -799,8 +799,8 @@
     justify-content: flex-start;
   }
 
-  .hdt-page-type-index .ms-offers__tabs a,
-  .hdt-page-type-index .ms-offers__tabs a:first-child {
+  .hdt-page-type-index .ms-offers__tabs .ms-offers__tab,
+  .hdt-page-type-index .ms-offers__tabs .ms-offers__tab:first-child {
     flex: 1 0 max-content;
   }
 

@@ -134,6 +134,9 @@
 
         this.addEventListener('pointerdown', (event) => {
           if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+          // Capturing a dot's pointer on the slider retargets its click to the
+          // slider, so the button never receives the navigation click.
+          if (event.target.closest('[data-ms-hero-dot]')) return;
           this.pointerStartX = event.clientX;
           this.pointerStartY = event.clientY;
           this.pointerId = event.pointerId;

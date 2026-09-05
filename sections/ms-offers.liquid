@@ -1,5 +1,5 @@
 {%- assign offers_collection = section.settings.collection | default: collections.all -%}
-<section class="ms-home ms-offers">
+<ms-offers-products class="ms-home ms-offers">
   <div class="ms-home__container">
     <header class="ms-offers__header">
       <span class="ms-offers__badge">
@@ -9,60 +9,157 @@
       <h2 class="ms-home__title">{{ section.settings.heading }}</h2>
       <p class="ms-home__subtitle">{{ section.settings.text }}</p>
     </header>
-    <nav class="ms-offers__tabs" aria-label="{{ section.settings.tabs_label | escape }}">
-      <a href="{{ section.settings.tab_1_link | default: offers_collection.url }}">{{ section.settings.tab_1 }}</a>
-      <a href="{{ section.settings.tab_2_link | default: offers_collection.url }}">{{ section.settings.tab_2 }}</a>
-      <a class="is-active" href="{{ section.settings.tab_3_link | default: offers_collection.url }}">
-        {{- section.settings.tab_3 -}}
-      </a>
-    </nav>
+    <div class="ms-offers__tabs" role="tablist" aria-label="{{ section.settings.tabs_label | escape }}">
+      {%- for tab_index in (1..3) -%}
+        {%- assign title_key = 'tab_' | append: tab_index -%}
+        <button
+          class="ms-offers__tab{% if tab_index == 3 %} is-active{% endif %}"
+          type="button"
+          role="tab"
+          id="MSOffersTab-{{ section.id }}-{{ tab_index }}"
+          aria-controls="MSOffersPanel-{{ section.id }}-{{ tab_index }}"
+          aria-selected="{% if tab_index == 3 %}true{% else %}false{% endif %}"
+          tabindex="{% if tab_index == 3 %}0{% else %}-1{% endif %}"
+          data-ms-offers-tab="{{ tab_index }}"
+        >
+          {{- section.settings[title_key] | escape -}}
+        </button>
+      {%- endfor -%}
+    </div>
     <div class="ms-offers__viewport ms-home__rail">
-      <div class="ms-offers__grid">
-        {%- for product in offers_collection.products limit: 7 -%}
-          {%- assign variant = product.selected_or_first_available_variant -%}
-          <article class="ms-offers__item">
-            <a class="ms-offers__media" href="{{ product.url }}">
-              {%- if product.featured_image -%}
-                {{
-                  product.featured_image
-                  | image_url: width: 160
-                  | image_tag: loading: 'lazy', width: 64, height: 64, alt: product.title
-                }}
-              {%- endif -%}
-            </a>
-            <div class="ms-offers__copy">
-              <span>⚡ {{ section.settings.sale_label }}</span>
-              <a href="{{ product.url }}">{{ product.title }}</a>
-              <p>
-                {% if variant.compare_at_price > variant.price -%}
-                  <s>{{ variant.compare_at_price | money_without_trailing_zeros }}</s>
-                {%- endif -%}
-                <strong>{{ variant.price | money_without_trailing_zeros }}</strong>
-              </p>
+      {%- for tab_index in (1..3) -%}
+        {%- liquid
+          assign collection_key = 'tab_' | append: tab_index | append: '_collection'
+          assign link_key = 'tab_' | append: tab_index | append: '_link'
+          assign tab_collection = section.settings[collection_key]
+          assign legacy_link = section.settings[link_key]
+          if tab_collection == blank and legacy_link contains '/collections/'
+            assign legacy_handle = legacy_link | split: '/collections/' | last | split: '?' | first | split: '#' | first | split: '/' | first
+            assign tab_collection = collections[legacy_handle]
+          endif
+          if tab_collection == blank
+            assign tab_collection = offers_collection
+          endif
+        -%}
+        <div
+          class="ms-offers__panel"
+          id="MSOffersPanel-{{ section.id }}-{{ tab_index }}"
+          role="tabpanel"
+          aria-labelledby="MSOffersTab-{{ section.id }}-{{ tab_index }}"
+          tabindex="0"
+          data-ms-offers-panel="{{ tab_index }}"
+          {% unless tab_index == 3 %}hidden{% endunless %}
+        >
+          {% if tab_collection.products.size > 0 %}
+            <div class="ms-offers__grid">
+              {%- for product in tab_collection.products limit: 7 -%}
+                {%- assign variant = product.selected_or_first_available_variant -%}
+                {%- assign form_id = 'MSOffersForm-' | append: section.id | append: '-' | append: tab_index | append: '-' | append: product.id -%}
+                <article class="ms-offers__item">
+                  <a class="ms-offers__media" href="{{ product.url }}">
+                    {%- if product.featured_image -%}
+                      {{
+                        product.featured_image
+                        | image_url: width: 160
+                        | image_tag: loading: 'lazy', width: 64, height: 64, alt: product.title
+                      }}
+                    {%- endif -%}
+                  </a>
+                  <div class="ms-offers__copy">
+                    <span>⚡ {{ section.settings.sale_label }}</span>
+                    <a href="{{ product.url }}">{{ product.title }}</a>
+                    <p>
+                      {% if variant.compare_at_price > variant.price -%}
+                        <s>{{ variant.compare_at_price | money_without_trailing_zeros }}</s>
+                      {%- endif -%}
+                      <strong>{{ variant.price | money_without_trailing_zeros }}</strong>
+                    </p>
+                  </div>
+                  <wrapp-hdt-pr-frm class="ms-offers__form-wrapper">
+                    {%- form 'product', product, id: form_id, class: 'ms-offers__form' -%}
+                      <input type="hidden" name="id" value="{{ variant.id }}">
+                      <button
+                        type="submit"
+                        name="add"
+                        aria-label="{{ section.settings.add_label | escape }}"
+                        {% unless variant.available %}
+                          disabled
+                        {% endunless %}
+                      >
+                        +
+                      </button>
+                    {%- endform -%}
+                  </wrapp-hdt-pr-frm>
+                </article>
+              {%- endfor -%}
             </div>
-            <wrapp-hdt-pr-frm class="ms-offers__form-wrapper">
-              {%- form 'product', product, class: 'ms-offers__form' -%}
-                <input type="hidden" name="id" value="{{ variant.id }}">
-                <button
-                  type="submit"
-                  name="add"
-                  aria-label="{{ section.settings.add_label | escape }}"
-                  {% unless variant.available %}
-                    disabled
-                  {% endunless %}
-                >
-                  +
-                </button>
-              {%- endform -%}
-            </wrapp-hdt-pr-frm>
-          </article>
-        {%- endfor -%}
-      </div>
+          {% else %}
+            <p class="ms-offers__empty" role="status">{{ section.settings.empty_label | escape }}</p>
+          {% endif %}
+        </div>
+      {%- endfor -%}
     </div>
   </div>
-</section>
+</ms-offers-products>
+
+<script>
+  if (!customElements.get('ms-offers-products')) {
+    customElements.define('ms-offers-products', class extends HTMLElement {
+      connectedCallback() {
+        if (this.abortController) return;
+        this.abortController = new AbortController();
+        this.tabs = Array.from(this.querySelectorAll('[data-ms-offers-tab]'));
+        this.panels = Array.from(this.querySelectorAll('[data-ms-offers-panel]'));
+        this.viewport = this.querySelector('.ms-offers__viewport');
+        const options = { signal: this.abortController.signal };
+
+        this.tabs.forEach((tab, index) => {
+          tab.addEventListener('click', () => this.activate(tab.dataset.msOffersTab), options);
+          tab.addEventListener('keydown', (event) => {
+            let nextIndex;
+            // The visual tab order runs left-to-right inside the RTL section.
+            if (event.key === 'ArrowRight') nextIndex = index + 1;
+            if (event.key === 'ArrowLeft') nextIndex = index - 1;
+            if (event.key === 'Home') nextIndex = 0;
+            if (event.key === 'End') nextIndex = this.tabs.length - 1;
+            if (nextIndex === undefined) return;
+            event.preventDefault();
+            const nextTab = this.tabs[(nextIndex + this.tabs.length) % this.tabs.length];
+            this.activate(nextTab.dataset.msOffersTab, true);
+          }, options);
+        });
+
+        const selectedTab = this.tabs.find(tab => tab.getAttribute('aria-selected') === 'true') || this.tabs[0];
+        if (selectedTab) this.activate(selectedTab.dataset.msOffersTab);
+      }
+
+      disconnectedCallback() {
+        this.abortController?.abort();
+        this.abortController = null;
+      }
+
+      activate(tabId, moveFocus = false) {
+        const activeTab = this.tabs.find(tab => tab.dataset.msOffersTab === tabId);
+        const activePanel = this.panels.find(panel => panel.dataset.msOffersPanel === tabId);
+        if (!activeTab || !activePanel) return;
+
+        this.tabs.forEach(tab => {
+          const active = tab === activeTab;
+          tab.classList.toggle('is-active', active);
+          tab.setAttribute('aria-selected', String(active));
+          tab.tabIndex = active ? 0 : -1;
+        });
+        this.panels.forEach(panel => { panel.hidden = panel !== activePanel; });
+        // Reuse the existing rail so its LTR swipe handlers remain attached.
+        if (this.viewport) this.viewport.scrollLeft = 0;
+        if (moveFocus) activeTab.focus({ preventScroll: true });
+      }
+    });
+  }
+</script>
 {% stylesheet %}
   .ms-offers {
+    display: block;
     height: 603px;
     overflow: hidden;
     background: #fafafa;
@@ -103,22 +200,40 @@
     justify-content: flex-end;
     border-bottom: 1px solid #ddd;
   }
-  .ms-offers__tabs a {
+  .ms-offers__tabs .ms-offers__tab {
     display: grid;
     min-width: 128px;
     padding: 0 28px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
     place-items: center;
     color: #888;
     font-size: 16px;
     font-weight: 700;
     white-space: nowrap;
   }
-  .ms-offers__tabs a:first-child {
+  .ms-offers__tabs .ms-offers__tab:first-child {
     min-width: 162px;
   }
-  .ms-offers__tabs a.is-active {
+  .ms-offers__tabs .ms-offers__tab.is-active {
     border-bottom: 2px solid #1b5735;
     color: #1b4d2e;
+  }
+  .ms-offers__tab:focus-visible,
+  .ms-offers__panel:focus-visible {
+    outline: 2px solid #1f423d;
+    outline-offset: -3px;
+  }
+  .ms-offers__panel[hidden] {
+    display: none;
+  }
+  .ms-offers__empty {
+    margin: 0;
+    padding: 32px 16px;
+    text-align: center;
+    color: #737373;
   }
   .ms-offers__viewport {
     height: 366px;
@@ -244,8 +359,8 @@
       margin: 16px -8.5px 0;
       justify-content: center;
     }
-    .ms-offers__tabs a,
-    .ms-offers__tabs a:first-child {
+    .ms-offers__tabs .ms-offers__tab,
+    .ms-offers__tabs .ms-offers__tab:first-child {
       min-width: 103px;
       padding: 0 10px;
       font-size: 13px;
@@ -284,7 +399,7 @@
   .ms-offers__tabs {
     direction: ltr;
   }
-  .ms-offers__tabs a {
+  .ms-offers__tabs .ms-offers__tab {
     direction: rtl;
   }
   .ms-offers__copy p {
@@ -313,12 +428,16 @@
     { "type": "text", "id": "text", "label": "Description", "default": "عروض محدودة الوقت. اغتنمها قبل أن تفوتك!" },
     { "type": "text", "id": "tabs_label", "label": "Tabs accessibility label", "default": "تصنيفات العروض" },
     { "type": "text", "id": "tab_1", "label": "Tab 1", "default": "مشروبات باردة" },
-    { "type": "url", "id": "tab_1_link", "label": "Tab 1 link" },
+    { "type": "collection", "id": "tab_1_collection", "label": "Tab 1 collection" },
+    { "type": "url", "id": "tab_1_link", "label": "Tab 1 legacy collection link", "info": "Used only when Tab 1 collection is not selected. Products switch here without opening the link." },
     { "type": "text", "id": "tab_2", "label": "Tab 2", "default": "الصوصات" },
-    { "type": "url", "id": "tab_2_link", "label": "Tab 2 link" },
+    { "type": "collection", "id": "tab_2_collection", "label": "Tab 2 collection" },
+    { "type": "url", "id": "tab_2_link", "label": "Tab 2 legacy collection link", "info": "Used only when Tab 2 collection is not selected. Products switch here without opening the link." },
     { "type": "text", "id": "tab_3", "label": "Tab 3", "default": "حلويات مبردة" },
-    { "type": "url", "id": "tab_3_link", "label": "Tab 3 link" },
-    { "type": "collection", "id": "collection", "label": "Products collection" },
+    { "type": "collection", "id": "tab_3_collection", "label": "Tab 3 collection" },
+    { "type": "url", "id": "tab_3_link", "label": "Tab 3 legacy collection link", "info": "Used only when Tab 3 collection is not selected. Products switch here without opening the link." },
+    { "type": "collection", "id": "collection", "label": "Fallback products collection", "info": "Used for tabs without a collection or a valid legacy collection link." },
+    { "type": "text", "id": "empty_label", "label": "Empty collection message", "default": "لا توجد منتجات في هذا التصنيف حالياً." },
     { "type": "text", "id": "sale_label", "label": "Sale label", "default": "في التخفيضات" },
     { "type": "text", "id": "add_label", "label": "Add button label", "default": "أضف إلى السلة" }
   ],

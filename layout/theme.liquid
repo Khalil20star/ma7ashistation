@@ -41,6 +41,10 @@
       endif
     -%}
     {{ 'ms-global-font.css' | asset_url | stylesheet_tag }}
+    {%- unless request.page_type == 'index' -%}
+      {%- render 'ms-storefront-colors' -%}
+      {{ 'ms-storefront.css' | asset_url | stylesheet_tag }}
+    {%- endunless -%}
     {%- if request.page_type == 'index' -%}
       {{ 'ms-home.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'ms-home.js' | asset_url }}" defer="defer"></script>

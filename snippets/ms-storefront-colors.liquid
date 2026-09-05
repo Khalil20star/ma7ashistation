@@ -1,0 +1,34 @@
+{%- comment -%}
+  Match the homepage palette without turning white text on dark/image-backed
+  color schemes into dark text. Keep scheme backgrounds and status colors.
+{%- endcomment -%}
+{%- unless request.page_type == 'index' -%}
+  {% style %}
+    {%- for scheme in settings.color_schemes -%}
+      {%- assign text_brightness = scheme.settings.text | color_brightness -%}
+      body:not(.hdt-page-type-index) :where([color-scheme="{{ scheme.id }}"]) {
+        {% if text_brightness > 186 %}
+          --color-foreground: 255 255 255;
+          --color-foreground2: 190 190 190;
+          --color-secondary: 190 190 190;
+          --color-pr-text: 255 255 255;
+          --ms-page-heading: #fff;
+          --hdt-link-color: 255 255 255;
+          --hdt-link-hover-color: 255 255 255;
+          --hdt-btn-outline-color: 255 255 255;
+          --hdt-btn-outline-border-color: 255 255 255;
+        {% else %}
+          --color-foreground: 15 40 24;
+          --color-foreground2: 136 136 136;
+          --color-secondary: 136 136 136;
+          --color-pr-text: 26 26 26;
+          --ms-page-heading: #1f423d;
+          --hdt-link-color: 27 77 46;
+          --hdt-link-hover-color: 20 60 36;
+          --hdt-btn-outline-color: 27 77 46;
+          --hdt-btn-outline-border-color: 27 77 46;
+        {% endif %}
+      }
+    {%- endfor -%}
+  {% endstyle %}
+{%- endunless -%}

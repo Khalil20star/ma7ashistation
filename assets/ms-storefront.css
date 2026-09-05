@@ -1,0 +1,228 @@
+/* Homepage brand styles for the standard Shopify theme pages.
+ * Keep page structure, form behavior, swatches and semantic status colors intact.
+ */
+body:not(.hdt-page-type-index) {
+  --color-base-text: 15 40 24;
+  --color-foreground: 15 40 24;
+  --color-foreground2: 136 136 136;
+  --color-secondary: 136 136 136;
+  --color-pr-text: 26 26 26;
+  --hdt-btn-outline-color: 27 77 46;
+  --hdt-btn-outline-border-color: 27 77 46;
+  --hdt-link-color: 27 77 46;
+  --hdt-link-hover-color: 20 60 36;
+  --ms-page-heading: #1f423d;
+  --font-body-family: "Tajawal", sans-serif;
+  --font-heading-family: "Tajawal", sans-serif;
+  --font-sheading-family: "Tajawal", sans-serif;
+  color: #0f2818;
+}
+
+body:not(.hdt-page-type-index),
+body:not(.hdt-page-type-index) [color-scheme] {
+  --color-accent: 27 77 46;
+  --hdt-btn-color: 255 255 255;
+  --hdt-btn-bg: 27 77 46;
+  --hdt-btn-border-color: 27 77 46;
+  --hdt-btn-hover-color: 255 255 255;
+  --hdt-btn-hover-bg: 20 60 36;
+  --hdt-btn-hover-border-color: 20 60 36;
+  --hdt-btn-secondary-color: 255 255 255;
+  --hdt-btn-secondary-bg: 27 77 46;
+  --hdt-btn-tertiary-color: 255 255 255;
+  --hdt-btn-tertiary-bg: 27 77 46;
+  --color-pr-price: 255 59 48;
+  --color-pr-sale-price: 255 59 48;
+  --color-pr-rating: 245 166 35;
+}
+
+body:not(.hdt-page-type-index) :where(h1, h2, h3, h4, h5, h6) {
+  color: var(--ms-page-heading);
+}
+
+body:not(.hdt-page-type-index) :is(.hdt-heading-template-text, .hdt-main-heading .hdt-heading-liquid, .hdt-product__title > h1, .hdt-product__title > h2, .shopify-policy__title h1) {
+  color: var(--ms-page-heading);
+  font-size: 35px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+body:not(.hdt-page-type-index) .hdt-card-product__title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+body:not(.hdt-page-type-index) .hdt-compare-at-price {
+  color: #7f7f7f;
+}
+
+/* Use the theme's button tokens so solid, outline and text-link variants
+ * retain their distinct behavior; do not recolor every button or SVG.
+ */
+body:not(.hdt-page-type-index) .hdt-btn {
+  --hdt-btn-font-family: "Tajawal", sans-serif;
+  --hdt-btn-font-weight: 700;
+  font-family: "Tajawal", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+body:not(.hdt-page-type-index) .hdt-btn-accent {
+  --color-accent: 27 77 46;
+}
+
+body:not(.hdt-page-type-index) :is(.hdt-btn-outline-accent, .hdt-btn-outline-tertiary, .hdt-btn-link-accent, .hdt-btn-link-accent-hover) {
+  --color-accent: var(--hdt-link-color);
+}
+
+body:not(.hdt-page-type-index) .hdt-btn:focus-visible {
+  outline: 2px solid rgb(var(--color-accent));
+  outline-offset: 3px;
+}
+
+/* Only the unbranded Shopify button is theme-controlled. Wallet/provider
+ * buttons and their embedded checkout UI keep their own branding.
+ */
+body:not(.hdt-page-type-index) .shopify-payment-button__button--unbranded {
+  background: #1b4d2e;
+  color: #fff;
+  font-family: "Tajawal", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+body:not(.hdt-page-type-index) .shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  background: #143c24;
+}
+
+/* Shared header: retain the existing navigation, icons and sticky behavior. */
+body:not(.hdt-page-type-index) .hdt-main-header,
+body:not(.hdt-page-type-index) .hdt-main-header [color-scheme],
+body:not(.hdt-page-type-index) .hdt-header-menu-mobile {
+  --color-foreground: 31 66 61;
+  --color-foreground2: 31 66 61;
+  --color-background: 250 250 250;
+  --gradient-background: none;
+  --ms-page-heading: #1f423d;
+  color: #1f423d;
+}
+
+body:not(.hdt-page-type-index) .hdt-main-header {
+  background: #fafafa;
+}
+
+body:not(.hdt-page-type-index) .hdt-main-header .hdt-menu-link,
+body:not(.hdt-page-type-index) .hdt-header-menu-mobile .hdt-menu-link {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+body:not(.hdt-page-type-index) .hdt-main-header .hdt-search_input {
+  color: #1f423d;
+  font-size: 14px;
+}
+
+body:not(.hdt-page-type-index) .hdt-main-header .hdt-search_submit {
+  color: #1f423d;
+  background: transparent;
+  border-color: transparent;
+}
+
+body:not(.hdt-page-type-index) .hdt-announcement-bar {
+  --color-foreground: 255 255 255;
+  --color-background: 31 66 61;
+  --gradient-background: none;
+  --color-accent: 255 255 255;
+  background: #1f423d;
+  color: #fff;
+}
+
+body:not(.hdt-page-type-index) .hdt-announcement-bar__text {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+body:not(.hdt-page-type-index) .hdt-top-bar {
+  --color-foreground: 31 66 61;
+  --color-background: 250 250 250;
+  --gradient-background: none;
+  font-size: 13px;
+}
+
+/* The footer's nested schemes need their own contrast-safe colors. */
+body:not(.hdt-page-type-index) > footer,
+body:not(.hdt-page-type-index) > footer [color-scheme] {
+  --color-foreground: 255 255 255;
+  --color-foreground2: 176 189 187;
+  --color-secondary: 176 189 187;
+  --color-background: 31 66 61;
+  --color-background2: 31 66 61;
+  --gradient-background: none;
+  --ms-page-heading: #fff;
+  --color-accent: 255 255 255;
+  --hdt-link-color: 176 189 187;
+  --hdt-link-hover-color: 255 255 255;
+  --hdt-btn-outline-color: 255 255 255;
+  --hdt-btn-outline-border-color: 255 255 255;
+  --color-line-border: 58 89 84;
+  color: rgb(255 255 255 / 65%);
+  background: #1f423d;
+}
+
+body:not(.hdt-page-type-index) > footer .hdt-footer-heading,
+body:not(.hdt-page-type-index) > footer .hdt-footer-heading-text {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 17px;
+  letter-spacing: 0;
+}
+
+body:not(.hdt-page-type-index) > footer .hdt-col-content,
+body:not(.hdt-page-type-index) > footer p {
+  color: rgb(255 255 255 / 55%);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+body:not(.hdt-page-type-index) > footer .hdt-menu-list a {
+  color: rgb(255 255 255 / 65%);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+body:not(.hdt-page-type-index) > footer .hdt-menu-list a:hover {
+  color: #fff;
+}
+
+body:not(.hdt-page-type-index) > footer input[type="email"] {
+  color: #0f2818;
+  background: #fff;
+  font-size: 13px;
+}
+
+body:not(.hdt-page-type-index) > footer input[type="email"]::placeholder {
+  color: #7f7f7f;
+}
+
+@media (max-width: 767px) {
+  body:not(.hdt-page-type-index) :is(.hdt-heading-template-text, .hdt-main-heading .hdt-heading-liquid, .hdt-product__title > h1, .hdt-product__title > h2, .shopify-policy__title h1) {
+    font-size: 22px;
+    line-height: 26px;
+  }
+
+  body:not(.hdt-page-type-index) .hdt-card-product__title {
+    font-size: 13px;
+    line-height: 16px;
+  }
+
+  body:not(.hdt-page-type-index) .hdt-header-menu-mobile .hdt-menu-link {
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
