@@ -12,6 +12,36 @@
  */
 .hdt-page-type-index .ms-home {
   max-width: 100%;
+  --ms-action: #1b4d2e;
+  --ms-sale: #d63b2f;
+}
+
+/* Figma surface and component colors; shared by both responsive layouts. */
+.hdt-page-type-index .ms-product-card__form button,
+.hdt-page-type-index .ms-product-card__button,
+.hdt-page-type-index .ms-offers__form button {
+  background: var(--ms-action);
+}
+
+.hdt-page-type-index .ms-product-card__form button,
+.hdt-page-type-index .ms-product-card__button {
+  border-radius: 9px;
+}
+
+.hdt-page-type-index .ms-product-card__badge {
+  background: var(--ms-sale);
+}
+
+.hdt-page-type-index .ms-product-card__prices s {
+  color: #7f7f7f;
+}
+
+.hdt-page-type-index .ms-offers .ms-home__title {
+  color: #0f2818;
+}
+
+.hdt-page-type-index .ms-promos__content small {
+  color: rgb(255 255 255 / 65%);
 }
 
 .hdt-page-type-index .ms-home__container {
@@ -21,7 +51,7 @@
 .hdt-page-type-index .ms-product-card {
   display: flex;
   height: auto;
-  min-height: 0;
+  min-height: 511px;
   flex-direction: column;
 }
 
@@ -88,6 +118,10 @@
 
 .hdt-page-type-index .ms-categories {
   overflow: visible;
+}
+
+.hdt-page-type-index .ms-categories > .ms-home__container {
+  padding-bottom: 35px;
 }
 
 .hdt-page-type-index .ms-categories__carousel-shell,
@@ -200,6 +234,10 @@
   padding-top: 0;
 }
 
+.hdt-page-type-index .ms-why__header {
+  min-height: 80px;
+}
+
 .hdt-page-type-index .ms-why__grid {
   width: min(100%, 1060px);
   grid-auto-rows: auto;
@@ -208,7 +246,7 @@
 
 .hdt-page-type-index .ms-why__card {
   min-width: 0;
-  min-height: 85px;
+  min-height: 84.8px;
 }
 
 /* Offers */
@@ -227,11 +265,18 @@
 }
 
 .hdt-page-type-index .ms-offers > .ms-home__container {
-  padding-bottom: 40px;
+  padding-bottom: 31px;
+}
+
+@media (min-width: 768px) {
+  .hdt-page-type-index .ms-offers__header .ms-home__subtitle {
+    line-height: 18px;
+  }
 }
 
 .hdt-page-type-index .ms-offers__tabs {
   min-height: 54px;
+  flex-direction: row-reverse;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
@@ -268,6 +313,7 @@
 
 .hdt-page-type-index .ms-reviews__inner {
   width: min(100%, 1440px);
+  min-height: 316px;
   margin-inline: auto;
 }
 
@@ -295,6 +341,40 @@
   flex: 1;
 }
 
+/* Avoid the base theme's 1.7 line-height and paragraph margins inflating cards. */
+.hdt-page-type-index .ms-reviews__slider blockquote > div {
+  color: #f5c842;
+  line-height: 29px;
+}
+
+.hdt-page-type-index .ms-reviews__slider blockquote::before,
+.hdt-page-type-index .ms-reviews__slider blockquote::after {
+  content: none;
+}
+
+.hdt-page-type-index .ms-reviews__slider blockquote p {
+  margin: 0;
+  color: #2a2a2a;
+}
+
+.hdt-page-type-index .ms-reviews__slider cite {
+  line-height: 19px;
+}
+
+.hdt-page-type-index .ms-reviews__slider small {
+  line-height: 17px;
+}
+
+.hdt-page-type-index .ms-reviews__info b {
+  color: #f5c842;
+  line-height: 19px;
+  letter-spacing: 2px;
+}
+
+.hdt-page-type-index .ms-reviews__info p {
+  line-height: 20px;
+}
+
 /* Video rail */
 .hdt-page-type-index .ms-home.ms-videos,
 .hdt-page-type-index .ms-videos > .ms-home__container,
@@ -311,6 +391,10 @@
 
 .hdt-page-type-index .ms-videos > .ms-home__container {
   padding-bottom: 40px;
+}
+
+.hdt-page-type-index .ms-videos header {
+  min-height: 72px;
 }
 
 .hdt-page-type-index .ms-videos__viewport {
@@ -342,6 +426,16 @@
   min-height: 76px;
 }
 
+.hdt-page-type-index .ms-videos__product b,
+.hdt-page-type-index .ms-videos__product em {
+  line-height: 20px;
+}
+
+.hdt-page-type-index .ms-videos__product strong,
+.hdt-page-type-index .ms-videos__product s {
+  line-height: 1.2;
+}
+
 /* Footer */
 .hdt-page-type-index .ms-home.ms-footer,
 .hdt-page-type-index .ms-footer__top,
@@ -358,8 +452,21 @@
 
 .hdt-page-type-index .ms-footer__top {
   min-height: 299px;
-  grid-template-columns: minmax(70px, 88px) minmax(70px, 83px) minmax(70px, 90px) minmax(260px, 480px);
-  column-gap: clamp(24px, 6vw, 144px);
+  grid-template-columns: minmax(70px, 88px) minmax(70px, 83px) 70px minmax(260px, 480px);
+  column-gap: clamp(24px, 10vw, 144px);
+}
+
+.hdt-page-type-index .ms-footer h2 {
+  color: #fff;
+}
+
+.hdt-page-type-index .ms-footer__brand {
+  align-items: flex-start;
+}
+
+/* This extra theme toolbar is not part of the homepage design. */
+.hdt-page-type-index .hdt-section-toolbar-mobile {
+  display: none;
 }
 
 .hdt-page-type-index .ms-footer__brand,
@@ -466,8 +573,19 @@
   }
 
   .hdt-page-type-index .ms-product-card {
-    width: clamp(150px, 42vw, 170px);
-    flex: 0 0 clamp(150px, 42vw, 170px);
+    --ms-mobile-card-width: max(150px, 42.016vw);
+    width: var(--ms-mobile-card-width);
+    min-height: 250px;
+    flex: 0 0 var(--ms-mobile-card-width);
+  }
+
+  .hdt-page-type-index .ms-product-card__form button,
+  .hdt-page-type-index .ms-product-card__button {
+    border-radius: 3px;
+  }
+
+  .hdt-page-type-index .ms-featured .ms-product-card__badge:not(.is-sale) {
+    background: var(--ms-action);
   }
 
   .hdt-page-type-index .ms-product-card__media {
@@ -480,6 +598,15 @@
     width: 100%;
     height: auto;
     min-height: 90px;
+    gap: 7px;
+  }
+
+  /* The Figma text box is shorter than its Arabic glyphs. Keep the compact
+   * card proportions without clipping the tops and descenders of the title. */
+  .hdt-page-type-index .ms-product-card__title {
+    height: auto;
+    flex-basis: auto;
+    line-height: 16px;
   }
 
   .hdt-page-type-index .ms-home.ms-announcement,
@@ -491,6 +618,7 @@
     left: auto;
     width: 100%;
     min-height: 36px;
+    padding-block: 2px;
     padding-inline: 16px;
     transform: none;
   }
@@ -503,13 +631,17 @@
   .hdt-page-type-index .ms-header__bar {
     min-height: 116px;
     grid-template-columns: 22px minmax(0, 1fr) 22px;
-    grid-template-rows: minmax(58px, auto) minmax(58px, auto);
+    grid-template-rows: minmax(58px, auto) minmax(57px, auto);
     gap: 0;
   }
 
   .hdt-page-type-index .ms-home.ms-trust,
   .hdt-page-type-index .ms-trust__grid {
     height: auto;
+  }
+
+  .hdt-page-type-index .ms-trust__item:nth-child(n) {
+    padding-block: 6px;
   }
 
   .hdt-page-type-index .ms-trust__grid {
@@ -522,7 +654,8 @@
   }
 
   .hdt-page-type-index .ms-categories > .ms-home__container {
-    padding-bottom: 14px;
+    padding-inline: 0;
+    padding-bottom: 13px;
   }
 
   .hdt-page-type-index .ms-categories__carousel-shell {
@@ -545,18 +678,19 @@
   .hdt-page-type-index .ms-best__grid {
     display: flex;
     width: max-content;
-    gap: 8px;
+    gap: 3.66px;
   }
 
   .hdt-page-type-index .ms-best__grid > .ms-product-card {
-    width: clamp(150px, 42vw, 170px);
+    width: var(--ms-mobile-card-width);
     max-width: none;
-    flex: 0 0 clamp(150px, 42vw, 170px);
+    flex: 0 0 var(--ms-mobile-card-width);
     scroll-snap-align: start;
   }
 
   .hdt-page-type-index .ms-promos {
     padding: 16px;
+    background: #fff;
   }
 
   .hdt-page-type-index .ms-promos__grid {
@@ -569,16 +703,18 @@
   }
 
   .hdt-page-type-index .ms-featured > .ms-home__container {
-    padding-bottom: 16px;
+    padding-bottom: 0;
   }
 
   .hdt-page-type-index .ms-featured .ms-home__title {
     height: auto;
     min-height: 50px;
+    padding-block: 12px;
   }
 
   .hdt-page-type-index .ms-featured__tabs-viewport {
-    min-height: 68px;
+    min-height: 78px;
+    background: #eff4f1;
   }
 
   .hdt-page-type-index .ms-featured__tabs {
@@ -592,29 +728,53 @@
   .hdt-page-type-index .ms-featured__products-viewport {
     height: auto;
     padding: 12px 16px 8px;
+    overflow: clip;
   }
 
   .hdt-page-type-index .ms-featured__products {
-    width: 100%;
+    display: flex;
+    width: max-content;
+    min-width: 100%;
     height: auto;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 3.66px;
   }
 
   .hdt-page-type-index .ms-featured__products > .ms-product-card {
-    width: 100%;
-    flex-basis: auto;
+    width: var(--ms-mobile-card-width);
+    flex-basis: var(--ms-mobile-card-width);
   }
 
   .hdt-page-type-index .ms-featured__dots {
+    position: relative;
     display: flex;
     height: auto;
-    min-height: 18px;
-    margin-top: 12px;
+    min-height: 9px;
+    margin-top: 2px;
+  }
+
+  .hdt-page-type-index .ms-featured__arrow {
+    position: absolute;
+    top: 50%;
+    width: 18px;
+    font-size: 20px;
+    line-height: 18px;
+    transform: translateY(-50%);
+  }
+
+  .hdt-page-type-index .ms-featured__arrow:first-child {
+    inset-inline-start: -26px;
+  }
+
+  .hdt-page-type-index .ms-featured__arrow:last-child {
+    inset-inline-end: -26px;
   }
 
   .hdt-page-type-index .ms-why {
     padding-block: 16px;
+  }
+
+  .hdt-page-type-index .ms-why__header {
+    min-height: 77px;
   }
 
   .hdt-page-type-index .ms-why__grid {
@@ -629,10 +789,11 @@
 
   .hdt-page-type-index .ms-offers > .ms-home__container {
     padding-bottom: 16px;
+    min-height: 524px;
   }
 
   .hdt-page-type-index .ms-offers__header {
-    min-height: 0;
+    min-height: 101px;
   }
 
   .hdt-page-type-index .ms-offers__tabs {
@@ -661,8 +822,9 @@
     width: max-content;
     height: auto;
     grid-auto-flow: column;
+    grid-template-columns: none;
     grid-template-rows: repeat(3, minmax(90px, auto));
-    grid-auto-columns: minmax(min(248px, calc(100vw - 48px)), 248px);
+    grid-auto-columns: min(248px, calc(100vw - 48px));
   }
 
   .hdt-page-type-index .ms-offers__item {
@@ -676,23 +838,28 @@
     width: 100%;
     height: auto;
     padding: 20px 16px;
+    min-height: 445px;
+    gap: 15px;
   }
 
   .hdt-page-type-index .ms-reviews__info {
     width: 100%;
     height: auto;
     flex: none;
-    gap: 14px;
+    min-height: 139px;
+    gap: 18px;
   }
 
   .hdt-page-type-index .ms-reviews__info h2 {
     width: 100%;
     font-size: 22px;
+    line-height: 24px;
   }
 
   .hdt-page-type-index .ms-reviews__info p {
     white-space: normal;
     text-align: center;
+    line-height: 18.85px;
   }
 
   .hdt-page-type-index .ms-reviews__slider {
@@ -705,23 +872,40 @@
     width: 100%;
     min-height: 225px;
     flex-basis: 100%;
-    padding-inline: clamp(20px, 9vw, 35px);
+    padding: 20px 22.5px;
     transform: none;
+  }
+
+  .hdt-page-type-index .ms-videos {
+    background: #fafafa;
+    min-height: 550px;
+  }
+
+  .hdt-page-type-index .ms-videos header {
+    min-height: 56px;
   }
 
   .hdt-page-type-index .ms-videos > .ms-home__container {
     padding-bottom: 16px;
+    padding-inline: 0;
   }
 
   .hdt-page-type-index .ms-videos__viewport {
     height: auto;
+    --ms-video-width: min(70vw, 260.65px);
+  }
+
+  .hdt-page-type-index .ms-videos__track {
+    padding-inline: calc((100vw - var(--ms-video-width)) / 2);
   }
 
   .hdt-page-type-index .ms-videos__card {
-    width: min(70vw, 261px);
-    flex-basis: min(70vw, 261px);
+    width: var(--ms-video-width);
+    flex-basis: var(--ms-video-width);
     height: auto;
     aspect-ratio: 260.65 / 444.96;
+    border-radius: 14.89px;
+    scroll-snap-align: center;
   }
 
   .hdt-page-type-index .ms-videos__product {
@@ -733,14 +917,14 @@
 
   .hdt-page-type-index .ms-footer {
     height: auto;
-    padding: 16px;
+    padding: 16px 16px 0;
   }
 
   .hdt-page-type-index .ms-footer__top {
     width: 100%;
     height: auto;
     min-height: 0;
-    gap: 32px;
+    gap: 36px;
   }
 
   .hdt-page-type-index .ms-footer__brand {
@@ -748,6 +932,7 @@
     height: auto;
     flex: none;
     padding-bottom: 0;
+    align-items: center;
   }
 
   .hdt-page-type-index .ms-footer__brand p {
@@ -757,7 +942,8 @@
   .hdt-page-type-index .ms-footer__menus {
     width: 100%;
     height: auto;
-    gap: 20px;
+    gap: 16px;
+    padding-bottom: 18px;
   }
 
   .hdt-page-type-index .ms-footer__menus > div:nth-child(1),

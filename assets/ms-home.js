@@ -3,6 +3,7 @@
   const PAGE_THRESHOLD = 42;
   const boundRails = new WeakSet();
   const boundPagers = new WeakSet();
+  let cachedRtlScrollType;
   const railSelector = [
     '.ms-categories__viewport',
     '.ms-best__viewport',
@@ -14,14 +15,26 @@
 
   const getTouch = (event) => event.touches[0] || event.changedTouches[0];
 
-  function detectRtlScrollType(rail) {
-    const initialScrollLeft = rail.scrollLeft;
-    if (initialScrollLeft > 0) return 'default';
+  function detectRtlScrollType() {
+    if (cachedRtlScrollType) return cachedRtlScrollType;
 
-    rail.scrollLeft = 1;
-    const scrollType = rail.scrollLeft === 0 ? 'negative' : 'reverse';
-    rail.scrollLeft = initialScrollLeft;
-    return scrollType;
+    // Real rails can have a 1px positive overflow from fractional card widths,
+    // or no overflow at the current breakpoint. Use a deterministic probe so
+    // neither rounding nor scroll snapping can reverse the swipe direction.
+    const probe = document.createElement('div');
+    const content = document.createElement('div');
+    probe.style.cssText = 'position:absolute;left:-10000px;top:-10000px;width:4px;height:1px;overflow:scroll;direction:rtl;visibility:hidden;';
+    content.style.cssText = 'width:8px;height:1px;';
+    probe.appendChild(content);
+    document.body.appendChild(probe);
+    if (probe.scrollLeft > 0) {
+      cachedRtlScrollType = 'default';
+    } else {
+      probe.scrollLeft = 1;
+      cachedRtlScrollType = probe.scrollLeft === 0 ? 'negative' : 'reverse';
+    }
+    probe.remove();
+    return cachedRtlScrollType;
   }
 
   function getLogicalScrollLeft(rail, scrollType) {
@@ -48,7 +61,7 @@
     if (boundRails.has(rail)) return;
     boundRails.add(rail);
     rail.classList.add('ms-touch-scroll-rtl');
-    const rtlScrollType = detectRtlScrollType(rail);
+    const rtlScrollType = detectRtlScrollType();
 
     const state = {
       active: false,

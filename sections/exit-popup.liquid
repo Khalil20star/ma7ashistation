@@ -4,7 +4,7 @@
   assign product_collection = section.settings.product_list | default: section.settings.collections.products
   assign page_type = request.page_type
   assign exit_popup = false
-  if section.settings[page_type] == true
+  if section.settings[page_type] == true and page_type != 'index'
     assign exit_popup = true
   endif
   assign color_list = 'products.theme_settings.color' | t | downcase | strip | replace: ' ,', ',' | replace: ', ', ',' | split: ',' | uniq

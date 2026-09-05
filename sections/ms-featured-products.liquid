@@ -203,8 +203,15 @@
 
         const firstProduct = this.currentPage * productsPerPage;
         const lastProduct = firstProduct + productsPerPage;
+        const showPreview = window.matchMedia('(max-width: 767px)').matches;
         productCards.forEach((card, cardIndex) => {
-          card.hidden = cardIndex < firstProduct || cardIndex >= lastProduct;
+          // Keep a glimpse of the next card on mobile without adding an off-page
+          // tab stop. Dots and LTR swipes still advance two products at a time.
+          const preview = showPreview && cardIndex === lastProduct;
+          card.hidden = cardIndex < firstProduct || (cardIndex >= lastProduct && !preview);
+          card.inert = preview;
+          if (preview) card.setAttribute('aria-hidden', 'true');
+          else card.removeAttribute('aria-hidden');
         });
 
         this.pageButtons.forEach((button, buttonIndex) => {
