@@ -438,10 +438,19 @@
             "author": "فهد المنيفي",
             "location": "الكويت - الجهراء"
           }
+        },
+        "review_KtBWV8": {
+          "type": "review",
+          "settings": {
+            "text": "محاشي ستيشن، طازجة ولذيذة! المحاشي كلها طازة والتغليف مرتب، وصلني الأكل حار وأنيق.",
+            "author": "فهد",
+            "location": "الكويت - الجهراء"
+          }
         }
       },
       "block_order": [
-        "review_1"
+        "review_1",
+        "review_KtBWV8"
       ],
       "settings": {
         "badge": "شهادات العملاء",
