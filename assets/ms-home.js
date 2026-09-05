@@ -14,24 +14,48 @@
 
   const getTouch = (event) => event.touches[0] || event.changedTouches[0];
 
+  function detectRtlScrollType(rail) {
+    const initialScrollLeft = rail.scrollLeft;
+    if (initialScrollLeft > 0) return 'default';
+
+    rail.scrollLeft = 1;
+    const scrollType = rail.scrollLeft === 0 ? 'negative' : 'reverse';
+    rail.scrollLeft = initialScrollLeft;
+    return scrollType;
+  }
+
+  function getLogicalScrollLeft(rail, scrollType) {
+    const maxScrollLeft = Math.max(0, rail.scrollWidth - rail.clientWidth);
+    if (scrollType === 'negative') return -rail.scrollLeft;
+    if (scrollType === 'default') return maxScrollLeft - rail.scrollLeft;
+    return rail.scrollLeft;
+  }
+
+  function setLogicalScrollLeft(rail, scrollType, value) {
+    const maxScrollLeft = Math.max(0, rail.scrollWidth - rail.clientWidth);
+    const nextValue = Math.max(0, Math.min(value, maxScrollLeft));
+
+    if (scrollType === 'negative') {
+      rail.scrollLeft = -nextValue;
+    } else if (scrollType === 'default') {
+      rail.scrollLeft = maxScrollLeft - nextValue;
+    } else {
+      rail.scrollLeft = nextValue;
+    }
+  }
+
   function bindTouchRail(rail) {
     if (boundRails.has(rail)) return;
     boundRails.add(rail);
-    rail.classList.add('ms-touch-scroll-ltr');
-
-    const startsAtRight = !rail.matches('.ms-offers__tabs');
-    if (startsAtRight) {
-      requestAnimationFrame(() => {
-        rail.scrollLeft = Math.max(0, rail.scrollWidth - rail.clientWidth);
-      });
-    }
+    rail.classList.add('ms-touch-scroll-rtl');
+    const rtlScrollType = detectRtlScrollType(rail);
 
     const state = {
       active: false,
       dragging: false,
       startX: 0,
       startY: 0,
-      startScrollLeft: 0,
+      startScrollPosition: 0,
       suppressClickUntil: 0
     };
 
@@ -48,7 +72,7 @@
       state.dragging = false;
       state.startX = touch.clientX;
       state.startY = touch.clientY;
-      state.startScrollLeft = rail.scrollLeft;
+      state.startScrollPosition = getLogicalScrollLeft(rail, rtlScrollType);
     }, { passive: true });
 
     rail.addEventListener('touchmove', (event) => {
@@ -69,7 +93,7 @@
       }
 
       if (event.cancelable) event.preventDefault();
-      rail.scrollLeft = state.startScrollLeft + distanceX;
+      setLogicalScrollLeft(rail, rtlScrollType, state.startScrollPosition - distanceX);
     }, { passive: false });
 
     rail.addEventListener('touchend', () => {
