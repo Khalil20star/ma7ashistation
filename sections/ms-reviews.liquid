@@ -85,7 +85,7 @@
           this.pointerStartX = null;
           this.pointerStartY = null;
           if (Math.abs(distanceX) < 42 || Math.abs(distanceY) >= Math.abs(distanceX)) return;
-          this.showSlide(this.currentIndex + (distanceX > 0 ? 1 : -1));
+          this.showSlide(this.currentIndex + (distanceX < 0 ? 1 : -1));
         }, { signal: this.abortController.signal });
 
         this.viewport?.addEventListener('pointercancel', () => {

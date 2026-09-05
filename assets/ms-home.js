@@ -17,6 +17,14 @@
   function bindTouchRail(rail) {
     if (boundRails.has(rail)) return;
     boundRails.add(rail);
+    rail.classList.add('ms-touch-scroll-ltr');
+
+    const startsAtRight = !rail.matches('.ms-offers__tabs');
+    if (startsAtRight) {
+      requestAnimationFrame(() => {
+        rail.scrollLeft = Math.max(0, rail.scrollWidth - rail.clientWidth);
+      });
+    }
 
     const state = {
       active: false,
@@ -61,8 +69,7 @@
       }
 
       if (event.cancelable) event.preventDefault();
-      const isRtl = getComputedStyle(rail).direction === 'rtl';
-      rail.scrollLeft = state.startScrollLeft + (isRtl ? distanceX : -distanceX);
+      rail.scrollLeft = state.startScrollLeft + distanceX;
     }, { passive: false });
 
     rail.addEventListener('touchend', () => {
@@ -139,8 +146,7 @@
         state.suppressClickUntil = performance.now() + 350;
         if (Math.abs(distanceX) >= PAGE_THRESHOLD) {
           const component = viewport.closest('ms-featured-products');
-          const isRtl = getComputedStyle(viewport).direction === 'rtl';
-          const step = isRtl ? (distanceX > 0 ? 1 : -1) : (distanceX < 0 ? 1 : -1);
+          const step = distanceX < 0 ? 1 : -1;
           component?.showPage?.(component.currentPage + step);
         }
       }

@@ -109,10 +109,12 @@
         this.currentIndex = index;
         this.atStart = index === 0;
         this.atEnd = index === this.items.length - 1;
-        item.scrollIntoView({
-          behavior: this.reducedMotion ? 'auto' : 'smooth',
-          block: 'nearest',
-          inline: 'start'
+        const viewportRect = this.viewport.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        const targetLeft = this.viewport.scrollLeft + itemRect.right - viewportRect.right;
+        this.viewport.scrollTo({
+          left: targetLeft,
+          behavior: this.reducedMotion ? 'auto' : 'smooth'
         });
       }
 

@@ -150,7 +150,7 @@
           this.pointerId = null;
           if (Math.abs(distanceX) < 45 || Math.abs(distanceY) >= Math.abs(distanceX)) return;
           this.suppressClickUntil = performance.now() + 350;
-          this.showSlide(this.currentIndex + (distanceX > 0 ? 1 : -1));
+          this.showSlide(this.currentIndex + (distanceX < 0 ? 1 : -1));
           this.restartAutoplay();
         }, { signal: this.abortController.signal });
 

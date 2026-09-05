@@ -843,3 +843,14 @@
   scroll-behavior: auto;
   scroll-snap-type: none;
 }
+
+/* Use one predictable LTR scroll coordinate system while the rail content and
+ * all Arabic cards keep their own RTL layout. This avoids reversed touch drag
+ * behavior across Safari, Chrome and Firefox RTL scroll implementations. */
+.hdt-page-type-index .ms-touch-scroll-ltr {
+  direction: ltr;
+}
+
+.hdt-page-type-index .ms-touch-scroll-ltr > * {
+  direction: rtl;
+}
