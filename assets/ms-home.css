@@ -51,7 +51,6 @@
 .ms-storefront .ms-product-card {
   display: flex;
   height: auto;
-  min-height: 511px;
   flex-direction: column;
 }
 
